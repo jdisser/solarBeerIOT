@@ -1,0 +1,4 @@
+#exclude the module, source and database directories
+database/**
+node_modules/**
+source/**
