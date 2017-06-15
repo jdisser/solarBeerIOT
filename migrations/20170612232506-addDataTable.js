@@ -4,7 +4,7 @@ module.exports = {
   up: function (queryInterface, Sequelize) {
 
     return queryInterface.createTable(
-      'battery',
+      'batRecords',
       {
         timeIndex: {
           type: Sequelize.DATE,
