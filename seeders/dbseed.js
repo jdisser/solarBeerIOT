@@ -1,30 +1,36 @@
 'use strict';
-
 var moment = require('moment');
-var now = moment();
-var stopTime = moment(now).add(2,'days');
-var interval = moment.duration(1,'hours');
-//var highNoon = moment(now).hour('12');
-var hours = [];
-var diffs = [];
-var currents = [];
-var count = 0;
-//var diff = 0;
-//const ninetyDeg = Math.PI/2;
-//var discharge = .05;                        //constant discharge rate for seed simulation
+var fs = require('fs');
 
+
+
+
+/*
+* load.getLoadI returns a current in mA set by iLoadLimit
+* with a random component of magnitude iRandom
+*
+*
+****/
+function Load(){
+    this.iRandom = 200;       //random fluctuation component of load current in mA
+    this.iLoadLimit = 2000;   //steady state load current
+    
+    this.getLoadI = function(){
+        return Math.floor(this.iLoadLimit + this.iRandom * Math.random)
+    }
+}
 
 
 /* panel.getOutput(now) returns the charging current based on the sun angle
 *  assuming that the daylight is 12 hours long for simple seeding
 *  set the panel.capacity to the max output of the model panel in mA
 ***/
-var panel = function () {
+function Panel() {
   
     //set capacity to max mA with panel at full sun
-    capacity: 0;
+    this.capacity = 0;
     
-    getOutput: function(now){
+    this.getOutput = function(now){
         
         const ninetyDeg = Math.PI/2;
         var highNoon = moment(now).hour('12');
@@ -44,15 +50,13 @@ var panel = function () {
 *  interesting seed data.
 *  The model assumes the time period of the charging is 1 hour.
 ***/
-
-
-var bat = function (){ 
+function Battery(){ 
     
-    batV: 12700;            //battery voltage in mV
-    batCapacity: 220000;    //capacity in mAH
-    batCharge: 176000;      //battery charge initially at 80% for simulation
+    this.batV = 12700;            //battery voltage in mV
+    this.batCapacity = 220000;    //capacity in mAH
+    this.batCharge = 176000;      //battery charge initially at 80% for simulation
 
-    var  chargeBatV = function(batI){                       
+    this.chargeBatV = function(batI){                       
         if (batI > 0){
             if (this.batV < 13.2){
                 this.batV += batI / 1000;
@@ -63,70 +67,81 @@ var bat = function (){
             }
         }
     }
-
-
-
-    charge: function(iIn){
+    
+    this.charge = function(iIn){
         if (this.batCharge <= (this.batCapacity - iIn)) {
             this.batCharge += iIn;
             chargeBatV(iIn);
             return this.batCharge;
         }
-        
     }
-    discharge: function(iOut){
+    
+    this.discharge = function(iOut){
         if (this.batCharge > iOut) {
             this.batCharge -= iOut;
             chargeBatV(-iOut);
             return this.batCharge;
         }
-        
     }
-    batState: function(){
-        
+    
+    this.batState = function(){
         return this.batCharge/this.batCapacity * 100;
-        
     }
-    batPower: function(batI){
-        
-        return batI * this.batV;
-        
+    
+    this.batPower = function(batI){
+        return (batI * this.batV) / 10000000;  
+        // mA / 1000 x mV / 1000 /1000 x 100 = .01kWH 
     }
-        
 };
 
+/*
+* Monitor creates a battery monitor to source simulation data to be persisted
+* it creates a battery, panel and load
+*
+***/
 
-class DataRecord {
+function Monitor(){
+    this.battery = new Battery();
+    this.panel = new Panel();
+    this.load = new Load();
+    this.now = moment();
+    this.count = 130;               //max number of records
+    this.days = 5;                  //days in simulation
+    this.minutes = 60;              //min between readings
+    this.interval = moment.duration(this.minutes,'minutes');
+    this.stopTime = moment(now).add(this.days,'days');  
     
-    constructor(count, time, charge, discharge, battery){   //pass in the battery object
-    this.count = count;
-    this.timeIndex = time;
-    this.batI = charge - discharge;
-    this.battery = battery;
-    }
+    this.readConfig = function(){
+        
+    };
     
-/*    get batV(){                                             //Battery voltage
-        if (this.batI > 0){
-            if (this.battery.voltage < 13.2){
-                this.battery.voltage += this.batI *.01;
-                return this.battery.voltage;
+    this.initMonitor = function(){
+        
+    };
+    
+    this.genBatData = function(){
+        
+    };
+    
+    this.genSysData = function(){
+        
+    };
+    
+    this.genData = function(){
+        //This is the time loop...
+        var loops = 0;
+        while (this.now.isBefore(stopTime)){
+            ++loops;
+            if (loops > this.count) {
+            break;
             }
-        } else {
-            if (this.battery.voltage > 10.7){
-                this.battery.voltage -= this.batI *.01;
-                return this.battery.voltage;
-            }
+
+            //code for generating data records within the Monitor goes here    
+
+            this.now.add(interval); //iterate the time loop here
         }
-    }
-*/
-    get batP(){return;}         //Power Delivered into the battery
-    get batEng(){return;}       //Milliamp hours delivered in the time period
-    get batSoc(){return;}       //Percentage charged
-    get batAhTot(){return;}     //Total amphours stored in a day
-    get batEoutTot(){return;}   //Total KWh discharged in a day
-    get batEinTot(){return;}    //Total KWh charged in a day
-    
-    get batRecord(){return;}    //returns the object for the record seed
+        
+    };
 }
 
 var timeStamp = function (moment){
@@ -135,27 +150,5 @@ var timeStamp = function (moment){
     return tStamp;
 }
 
-//This is the time loop...
 
-while (now.isBefore(stopTime)){
-    ++count;
-    if (count > 60) {
-        break;
-    }
-    
-    hours.push(now.hour());
-    //highNoon = moment(now).hour('12');
-    //diff = highNoon.diff(now, 'minutes');
-    diffs.push(diff);
-    /*if (diff >= -360 && diff <= 360){
-        currents.push(new DataRecord(count, timeStamp(now), Math.cos(diff/360*ninetyDeg), discharge, bat));
-    } else {
-        currents.push(new DataRecord(count, timeStamp(now), 0, discharge, bat));
-    }
-    */
-    now.add(interval); //iterate the time loop here
-}
 
-//console.log(hours);
-//console.log(diffs);
-console.log(currents);
