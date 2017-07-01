@@ -28,7 +28,7 @@ function Load(){
 function Panel() {
   
     //set capacity to max mA with panel at full sun
-    this.capacity = 0;
+    this.capacity = 20000;      //20A at battery volatge
     
     this.getOutput = function(now){
         
@@ -52,18 +52,48 @@ function Panel() {
 ***/
 function Battery(){ 
     
-    this.batV = 12700;            //battery voltage in mV
-    this.batCapacity = 220000;    //capacity in mAH
-    this.batCharge = 176000;      //battery charge initially at 80% for simulation
+    var states = {
+        INIT: = 1,
+        CHARGE = 2,
+        DISCHARGE = 3
+    };
+    
+    
+    this.batV = 12700;              //battery voltage in mV
+    this.batCapacity = 220000;      //capacity in mAH
+    this.batCharge = 176000;        //battery charge initially at 80% for simulation
+    this.chargeState = states.INIT;
+    
+
+    
+    var lastStates = [states.INIT];   //last n states to debounce charge cycles
+    
+    var chargeCyl = 0;              //# of battery charging cycles could be > solar cycles
+    
+    var discharges = {              //object to track discharge statistics
+      min = 0,
+      last = 0,
+      sum = 0,
+      n = 0,
+      avg = 0
+    };
+    
+    var setState = function() {
+        // set entry in lastStates[]
+        // get array vote
+        // if vote != to chargeState then= vote
+    };
 
     this.chargeBatV = function(batI){                       
         if (batI > 0){
             if (this.batV < 13.2){
                 this.batV += batI / 1000;
+                //call setState
             }
         } else {
             if (this.batV > 10.7){
                 this.batV -= batI / 1000;
+                //call set state
             }
         }
     }
@@ -109,21 +139,60 @@ function Monitor(){
     this.days = 5;                  //days in simulation
     this.minutes = 60;              //min between readings
     this.interval = moment.duration(this.minutes,'minutes');
-    this.stopTime = moment(now).add(this.days,'days');  
+    this.stopTime = moment(now).add(this.days,'days');
     
-    this.readConfig = function(){
+    var batteryData = {
+      timeIndex: 0,
+      batV: 0,
+      batI: 0,
+      batP: 0,
+      batE: 0,
+      bQtotal: 0,
+      bC: 0
+    };
+    
+    var batteryRecords = [];
+    
+    var systemData = {
+      timeIndex: 0,
+      eCharged: 0,
+      eDischarged: 0,
+      ahCumulative: 0,
+      vBatMin: 0,
+      vBatMax: 0,
+      minDischarge: 0,
+      lastDischarge: 0,
+      avgDischarge: 0,
+      discharges: 0,
+      cycles: 0
+    };
+    
+    var sysRecords = [];
+
+ 
+    var timeStamp = function (moment){
+        var tString = moment.format('X');
+        var tStamp = parseInt(tString);
+        return tStamp;
+    }
+    
+    // get configuration from monitor.cfg
+    var readConfig = function(){
         
     };
     
+    /* set the configurable properties in the pamel, battery, and load if called
+    *  using the data from the config file
+    **/
     this.initMonitor = function(){
         
     };
     
-    this.genBatData = function(){
+    var genBatData = function(){
         
     };
     
-    this.genSysData = function(){
+    var genSysData = function(){
         
     };
     
@@ -144,11 +213,7 @@ function Monitor(){
     };
 }
 
-var timeStamp = function (moment){
-    var tString = moment.format('X');
-    var tStamp = parseInt(tString);
-    return tStamp;
-}
+
 
 
 
