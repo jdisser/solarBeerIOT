@@ -52,10 +52,10 @@ function Panel() {
 ***/
 function Battery(){ 
     
-    var states = {
-        INIT: = 1,
-        CHARGE = 2,
-        DISCHARGE = 3
+    const states = {
+        INIT:  1,
+        CHARGE:  2,
+        DISCHARGE:  3
     };
     
     
@@ -66,36 +66,59 @@ function Battery(){
     
 
     
-    var lastStates = [states.INIT];   //last n states to debounce charge cycles
+    var lastStates = [states.INIT, states.INIT, states.INIT];   //last n states to debounce charge cycles
     
-    var chargeCyl = 0;              //# of battery charging cycles could be > solar cycles
+//# of battery charging cycles could be > solar cycles
     
     var discharges = {              //object to track discharge statistics
       min = 0,
       last = 0,
       sum = 0,
-      n = 0,
+      n = 0,                //# of battery charging cycles could be > solar cycles
       avg = 0
     };
     
-    var setState = function() {
+    var setCycles = function(currentState) {
         // set entry in lastStates[]
-        // get array vote
+        lastStates.pop();
+        lastStates.unshift(currentState);
+        // get array vote, 2 (or 3) out of 3 is state
+        // votes is an array of votes with index state i.e. votes[states.CHARGE] = charge votes
+        var votes = lastStates.reduce(function(counts, state){
+            if (counts[state]) {
+                counts[state]++;
+            } else {
+                counts[state] = 1;
+            }
+        },[]);
+        
+        // debState is the state that has occured 2 or more times in the past 3 cycles
+        // or is -1 if not (three differernt states)
+        var debState = votes.findIndex(function(e,i,a){
+            if (e>1) {
+                return true;
+            }
+        });
+        
         // if vote != to chargeState then= vote
     };
 
-    this.chargeBatV = function(batI){                       
+    this.chargeBatV = function(batI){
+        
+        var currentState;
+        
         if (batI > 0){
             if (this.batV < 13.2){
                 this.batV += batI / 1000;
-                //call setState
+                currentState = states.CHARGING;
             }
         } else {
             if (this.batV > 10.7){
                 this.batV -= batI / 1000;
-                //call set state
+                currentState = states.DISCHARGING;
             }
         }
+        this.setCycles(currentState);
     }
     
     this.charge = function(iIn){
