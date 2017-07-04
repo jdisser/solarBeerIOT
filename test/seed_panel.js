@@ -29,6 +29,10 @@ describe('Panel Model', function(){
       expect(panel.getOutput(now.hour('14'))).to.be.below(panel.capacity);
     });
     
+    it('Output should be > zero during daylight', function(){
+      expect(panel.getOutput(now.hour('14'))).to.be.above(0);
+    });
+    
     it('Output should be zero at night', function(){
       expect(panel.getOutput(now.hour('19'))).to.be.below(panel.capacity);
     });
