@@ -6,6 +6,9 @@
 * load.getLoadI returns a current in mA set by iLoadLimit
 * with a random component of magnitude iRandom
 *
+* IloadLimit sets a constant output and iRandom sets the range of a random
+* value that is added to it
+*
 *
 ****/
 function Load(){
