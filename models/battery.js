@@ -1,3 +1,7 @@
+'use strict';
+
+var moment = require('moment');
+
 /* Battery charge and discharge functions store energy in the battery
 *  and adjust the battery voltage based on the stored charge to simulate
 *  charge cycles. The model is a simple approximation for generating some
@@ -28,41 +32,103 @@ function Battery(){
     
     this.voltage = {
         max: 0,
-        min: 0
+        min: 15000
     };
 
     
     this.dischargeStat = {              //object to track discharge statistics
-      min: 0,
+      min: 176000,
       last: 0,
       sum: 0,
       n: 0,                //# of battery charging cycles could be > solar cycles
       avg: 0
     };
     
-    var setCycles = function(currentState) {
+    
+    /*
+    * Restore the properties to the listed defaults
+    *
+    *
+    **/
+    this.initialize = function(){
+      this.batV = 12700;              
+      this.batCapacity = 220000;     
+      this.batCharge = 176000;        
+      this.chargeState = states.INIT; 
+      this.ahCumulative = 0;
+      
+      this.energy = {
+        charge: 0,
+        discharge: 0
+      };
+      
+      this.voltage = {
+        max: 0,
+        min: 15000
+      };
+      
+      this.dischargeStat = {              
+        min: 176000,
+        last: 0,
+        sum: 0,
+        n: 0,               
+        avg: 0
+      };
+    }
+    
+    this.setCycles = function(currentState) {
         // set entry in lastStates[]
         lastStates.pop();
         lastStates.unshift(currentState);
-        // get array vote, 2 (or 3) out of 3 is state
+//        var debstate = this.chargeState;    //start with the debounce = current state
+        
+        var votes = [0,0,0];
+        var debState;
+
+        for (var i = 0; i<3; i++){          //count the votes in lastStates
+          switch (lastStates[i]){
+          
+            case 0:                         //INIT state
+              votes[0]++;
+            break;
+            
+            case 1:                         //CHARGE state
+              votes[1]++;
+            break;
+            
+            case 2:                         //DISCHARGE state
+              votes[2]++;
+            break;
+            
+            default:
+            
+            break;
+            
+          }
+        }
+
+
+
+
+/*        // get array vote, 2 (or 3) out of 3 is state
         // votes is an array of votes with index state i.e. votes[states.CHARGE] = charge votes
         // note: this function relies on the state being enummerated as an array index 1st element = 0
         var votes = lastStates.reduce(function(counts, state){
-            if (counts[state]) {
-                counts[state]++;
-            } else {
-                counts[state] = 1;
-            }
+            
+                counts[state] = counts[state] + 1;
+            
         },[]);
+        
+*/ 
         
         // debState is the state that has occured 2 or more times in the past 3 cycles
         // or is -1 if not (three differernt states)
-        var debState = votes.findIndex(function(e,i,a){
+        debState = votes.findIndex(function(e,i,a){
             if (e>1) {
                 return true;
             }
         });
-        
+     
         
         if ((debState !== this.chargeState)&&(debState !== -1)){    // if debState != to chargeState then a new state is starting
             if (debState === states.CHARGE) {                       //the discharge cycle is ending here
@@ -70,7 +136,7 @@ function Battery(){
                                                             //service the discharge object
                 this.dischargeStat.n++;                     //increment the number of discharge cycles
                 this.dischargeStat.sum += this.batCharge;   //add to the sum (BIG NUMBER!!)
-                this.dischargeStat.last = this.batCharge;
+                this.dischargeStat.last = this.batCharge;   //store the last discharge level
                 this.dischargeStat.avg = Math.floor(this.dischargeStat.sum / this.dischargeStat.n);
                 if (this.batCharge < this.dischargeStat.min){
                     this.dischargeStat.min = this.batCharge;
@@ -122,8 +188,8 @@ function Battery(){
         var ah = ampHours(iIn, duration);
         if (this.batCharge <= (this.batCapacity - ah)) {
             this.batCharge += ah;
-            chargeBatV(ah);
-            //return this.batCharge;
+            this.chargeBatV(ah);
+            return ah;
         }
     }
     
@@ -131,8 +197,8 @@ function Battery(){
         var ah = ampHours(iIn, duration);
         if (this.batCharge > ah) {
             this.batCharge -= ah;
-            chargeBatV(-ah);
-            //return this.batCharge;
+            this.chargeBatV(-ah);
+            return ah;
         }
     }
     
