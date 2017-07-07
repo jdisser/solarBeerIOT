@@ -11,8 +11,8 @@ var moment = require('moment');
 ***/
 function Battery(){ 
     
-    const states = {
-        INIT:  0,
+    const states = {                //this code meant to emulate enum but not implemented
+        INIT:  0,                   //use to define the meaning of the state numbers
         CHARGE:  1,
         DISCHARGE:  2
     };
@@ -22,7 +22,7 @@ function Battery(){
     this.batV = 12700;              //battery voltage in mV
     this.batCapacity = 220000;      //capacity in mAH
     this.batCharge = 176000;        //battery charge initially at 80% for simulation
-    this.chargeState = states.INIT; //battery is initially not charging or discharging
+    this.chargeState = 0;           //battery is initially not charging or discharging
     this.ahCumulative = 0;          //total charge
     
     this.energy = {
@@ -54,7 +54,7 @@ function Battery(){
       this.batV = 12700;              
       this.batCapacity = 220000;     
       this.batCharge = 176000;        
-      this.chargeState = states.INIT; 
+      this.chargeState = 0; 
       this.ahCumulative = 0;
       
       this.energy = {
@@ -114,49 +114,40 @@ function Battery(){
             break;
             
           }
+          console.log('i: ' + i);
+          console.log('votes: ' + votes);
+          console.log('lastStates: ' + lastStates);
+          console.log('debState: ' + debState);
         }
-
-
-
-
-/*        // get array vote, 2 (or 3) out of 3 is state
-        // votes is an array of votes with index state i.e. votes[states.CHARGE] = charge votes
-        // note: this function relies on the state being enummerated as an array index 1st element = 0
-        var votes = lastStates.reduce(function(counts, state){
-            
-                counts[state] = counts[state] + 1;
-            
-        },[]);
-        
- 
-        
-        // debState is the state that has occured 2 or more times in the past 3 cycles
-        // or is -1 if not (three differernt states)
-        debState = votes.findIndex(function(e,i,a){
-            if (e>1) {
-                return true;
-            }
-        });
- */    
         
         if (debState !== this.chargeState){                 // if debState != to chargeState then a new state is starting
-            if (debState === states.CHARGE) {               //the discharge cycle is ending here
-                this.chargeState = states.CHARGE;
-                                                            //service the discharge object
-                this.dischargeStat.n++;                     //increment the number of discharge cycles
-                this.dischargeStat.sum += this.batCharge;   //add to the sum (BIG NUMBER!!)
-                this.dischargeStat.last = this.batCharge;   //store the last discharge level
-                this.dischargeStat.avg = Math.floor(this.dischargeStat.sum / this.dischargeStat.n);
-                if (this.batCharge < this.dischargeStat.min){
-                    this.dischargeStat.min = this.batCharge;
+            if (debState === 1) {                           //the discharge or init cycle is ending here
+                    
+                if (this.chargeState === 2){                    //service the discharge object if discharge ending
+                                                                
+                    this.dischargeStat.n++;                     //increment the number of discharge cycles
+                    this.dischargeStat.sum += this.batCharge;   //add to the sum (BIG NUMBER!!)
+                    this.dischargeStat.last = this.batCharge;   //store the last discharge level
+                    this.dischargeStat.avg = Math.floor(this.dischargeStat.sum / this.dischargeStat.n);
+                    if (this.batCharge < this.dischargeStat.min){
+                        this.dischargeStat.min = this.batCharge;
+                        
+                    }
+                    console.log('n: '+ this.dischargeStat.n);
+                    console.log('sum: '+ this.dischargeStat.sum);
+                    console.log('last: '+ this.dischargeStat.last);
+                    console.log('avg: '+ this.dischargeStat.avg);
+                    console.log('min: '+ this.dischargeStat.min);
                 }
                 
+                this.chargeState = 1;                       //update the state AFTER triggering the statistics!!!
+                
             } else {                                        //the charge cycle is ending here
-                this.chargeState = states.DISCHARGE;        //only 2 reachable states after INIT
+                this.chargeState = 2;                       //only 2 reachable states after INIT
                 
             }
         }
-        
+        console.log('Charge State: ' + this.chargeState);
     };
 
     this.chargeBatV = function(ah){
@@ -219,3 +210,5 @@ function Battery(){
 };
 
 module.exports = Battery;
+
+
