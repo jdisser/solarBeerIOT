@@ -43,11 +43,45 @@ describe('Battery Model', function(){
        
      });
      
-     it('Should set the chage state to CHARGE = 1', function(){
+     it('Should set the charge state to CHARGE = 1', function(){
        expect(battery.chargeState).to.equal(1);
      });
      
+     it('Should set Voltage.min less than 15000', function(){
+       expect(battery.voltage.min).to.be.below(15000);
+     });
+     
+     it('Should set Voltage.max > 0', function(){
+       expect(battery.voltage.max).to.be.above(0);
+     });
+     
+     it('Should set energy.charge > 0', function(){
+       expect(battery.energy.charge).to.be.above(0);
+     });
      
    });
+   
+   describe('Battery Discharging',function(){
+     
+     before('Discharge the battery for 5 hours at 10 Amps',function(){
+
+       var chargeTime = moment.duration(1, 'hours');
+       battery.initialize();
+       for (var i = 0; i < 5; i++){
+         battery.discharge(10000, chargeTime);
+       }
+       
+     });
+     
+     it('Should set the charge state to CHARGE = 2', function(){
+       expect(battery.chargeState).to.equal(2);
+     });
+     
+     it('Should set energy.discharge > 0', function(){
+       expect(battery.energy.discharge).to.be.above(0);
+     });
+     
+   });
+   
 });
 

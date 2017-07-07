@@ -89,19 +89,28 @@ function Battery(){
           switch (lastStates[i]){
           
             case 0:                         //INIT state
-              votes[0]++;
+              ++votes[0];
+              if (votes[0]>1){
+                debState = 0;
+              }
             break;
             
             case 1:                         //CHARGE state
-              votes[1]++;
+              ++votes[1];
+              if (votes[1]>1){
+                debState = 1;
+              }
             break;
             
             case 2:                         //DISCHARGE state
-              votes[2]++;
+              ++votes[2];
+              if (votes[2]>1){
+                debState = 2;
+              }
             break;
             
             default:
-            
+              debState = this.chargeState;  //no change
             break;
             
           }
@@ -119,7 +128,7 @@ function Battery(){
             
         },[]);
         
-*/ 
+ 
         
         // debState is the state that has occured 2 or more times in the past 3 cycles
         // or is -1 if not (three differernt states)
@@ -128,10 +137,10 @@ function Battery(){
                 return true;
             }
         });
-     
+ */    
         
-        if ((debState !== this.chargeState)&&(debState !== -1)){    // if debState != to chargeState then a new state is starting
-            if (debState === states.CHARGE) {                       //the discharge cycle is ending here
+        if (debState !== this.chargeState){                 // if debState != to chargeState then a new state is starting
+            if (debState === states.CHARGE) {               //the discharge cycle is ending here
                 this.chargeState = states.CHARGE;
                                                             //service the discharge object
                 this.dischargeStat.n++;                     //increment the number of discharge cycles
@@ -153,20 +162,20 @@ function Battery(){
     this.chargeBatV = function(ah){
         
         var currentState;
-        var deltaV = Math.floor(ah/this.batCapacity * 2.5); //crude approximation!
+        var deltaV = Math.floor(ah/this.batCapacity * 2500); //crude approximation!
         var deltaE = Math.floor(this.batV * ah / 10000000); //mv ->V /1000 * maH ->A /1000 -> W -> (kW) /1000 -> (.01kW) * 100
         
         if (ah > 0){
-            if (this.batV < 13.2){
+            if (this.batV < 13200){
                 this.batV += deltaV;
-                currentState = states.CHARGING;
+                currentState = 1;               //states const not in scope here! 1 = CHARGING
                 this.energy.charge += deltaE;
             }
         } else {
-            if (this.batV > 10.7){
+            if (this.batV > 10700){
                 this.batV -= deltaV;
-                currentState = states.DISCHARGING;
-                this.energy.discharge -= deltaE;
+                currentState = 2;                   //2 = DISCHARGING
+                this.energy.discharge -= deltaE;    //ah is negative implies deltaE is negative!!!
             }
         }
         if (this.batV < this.voltage.min){
@@ -194,7 +203,7 @@ function Battery(){
     }
     
     this.discharge = function(iOut, duration){
-        var ah = ampHours(iIn, duration);
+        var ah = ampHours(iOut, duration);
         if (this.batCharge > ah) {
             this.batCharge -= ah;
             this.chargeBatV(-ah);
