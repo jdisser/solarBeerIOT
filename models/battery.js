@@ -19,11 +19,13 @@ function Battery(){
     
     var lastStates = [states.INIT, states.INIT, states.INIT];   //last 3 states to debounce charge cycles
     
+    this.chargeState = 0;           //battery is initially not charging or discharging
+    
     this.batV = 12700;              //battery voltage in mV
     this.batCapacity = 220000;      //capacity in mAH
     this.batCharge = 176000;        //battery charge initially at 80% for simulation
-    this.chargeState = 0;           //battery is initially not charging or discharging
-    this.ahCumulative = 0;          //total charge
+    this.percentCharge = 80;        //charge level in percent
+    this.ahCumulative = 0;          //total charge delivered
     
     this.energy = {
         charge: 0,
@@ -51,10 +53,13 @@ function Battery(){
     *
     **/
     this.initialize = function(){
+
+      this.chargeState = 0;
+
       this.batV = 12700;              
       this.batCapacity = 220000;     
       this.batCharge = 176000;        
-      this.chargeState = 0; 
+      this.percentCharge = 80;
       this.ahCumulative = 0;
       
       this.energy = {
@@ -184,6 +189,7 @@ function Battery(){
         if (this.batCharge <= (this.batCapacity - ah)) {
             this.batCharge += ah;
             this.chargeBatV(ah);
+            this.percentCharge = this.batPercent();
             return ah;
         }
     }
@@ -193,11 +199,13 @@ function Battery(){
         if (this.batCharge > ah) {
             this.batCharge -= ah;
             this.chargeBatV(-ah);
+            this.percentCharge = this.batPercent();
+            this.ahCumulative += ah;
             return ah;
         }
     }
     
-    this.batState = function(){
+    this.batPercent = function(){
         return this.batCharge/this.batCapacity * 100;
     }
     

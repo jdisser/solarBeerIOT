@@ -18,6 +18,9 @@ describe('Battery Model', function(){
     it('Should intialize the battery charge to 176000', function(){
       expect(battery.batCharge).to.equal(176000);
     });
+    it('Should initialize the %charge to 80', function(){
+      expect(battery.percentCharge).to.equal(80);
+    });
     it('Should intialize the charge state to 0', function(){
       expect(battery.chargeState).to.equal(0);
     });
@@ -59,6 +62,10 @@ describe('Battery Model', function(){
        expect(battery.energy.charge).to.be.above(0);
      });
      
+     it('Should set % charge > 80', function(){
+       expect(battery.percentCharge).to.be.above(80);
+     });
+     
     // it('Should increment the dischargeStat.n to 1', function(){
     //   expect(battery.dischargeStat.n).to.be.above(0);
     // });
@@ -83,6 +90,14 @@ describe('Battery Model', function(){
      
      it('Should set energy.discharge > 0', function(){
        expect(battery.energy.discharge).to.be.above(0);
+     });
+     
+     it('Should set ahCumulative > 0', function(){
+       expect(battery.ahCumulative).to.be.above(0);
+     });
+     
+     it('Should set % charge < 80', function(){
+       expect(battery.percentCharge).to.be.below(80);
      });
      
    });
