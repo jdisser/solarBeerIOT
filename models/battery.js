@@ -78,6 +78,7 @@ function Battery(){
     
     this.setCycles = function(currentState) {
         // set entry in lastStates[]
+        console.log('currentState: '+currentState);
         lastStates.pop();
         lastStates.unshift(currentState);
 //        var debstate = this.chargeState;    //start with the debounce = current state
@@ -157,15 +158,15 @@ function Battery(){
         var deltaE = Math.floor(this.batV * ah / 10000000); //mv ->V /1000 * maH ->A /1000 -> W -> (kW) /1000 -> (.01kW) * 100
         
         if (ah > 0){
+            currentState = 1;                   //states const not in scope here! 1 = CHARGING
             if (this.batV < 13200){
                 this.batV += deltaV;
-                currentState = 1;               //states const not in scope here! 1 = CHARGING
                 this.energy.charge += deltaE;
             }
         } else {
+            currentState = 2;                   //2 = DISCHARGING
             if (this.batV > 10700){
-                this.batV -= deltaV;
-                currentState = 2;                   //2 = DISCHARGING
+                this.batV += deltaV;                //-ah -> negative deltaV!!!
                 this.energy.discharge -= deltaE;    //ah is negative implies deltaE is negative!!!
             }
         }
@@ -175,6 +176,8 @@ function Battery(){
         if (this.batV > this.voltage.max){
             this.voltage.max = this.batV;
         }
+        console.log('deltaV: '+deltaV);
+        console.log('batV: '+this.batV);
         this.setCycles(currentState);
     }
     

@@ -103,7 +103,7 @@ describe('Battery Model', function(){
      });
      
      it('Should set the charge state to CHARGE = 1', function(){
-       expect(battery.chargeState).to.equal(2);
+       expect(battery.chargeState).to.equal(1);
      });
      
     // it('Should set energy.discharge > 0', function(){
