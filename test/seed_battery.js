@@ -106,9 +106,25 @@ describe('Battery Model', function(){
        expect(battery.chargeState).to.equal(1);
      });
      
-    // it('Should set energy.discharge > 0', function(){
-    //   expect(battery.energy.discharge).to.be.above(0);
-    // });
+    it('Should set dischargeStat.n = 1', function(){
+      expect(battery.dischargeStat.n).to.be.eql(1);
+    });
+    
+    it('Should set dischargeStat.sum > 0', function(){
+      expect(battery.dischargeStat.sum).to.be.above(0);
+    });
+    
+    it('Should set dischargeStat.last > 0', function(){
+      expect(battery.dischargeStat.last).to.be.above(0);
+    });
+    
+    it('Should set dischargeStat.avg > 0', function(){
+      expect(battery.dischargeStat.avg).to.be.above(0);
+    });
+    
+    it('Should set dischargeStat.min < 176000', function(){
+      expect(battery.dischargeStat.min).to.be.below(176000);
+    });
      
    });
    

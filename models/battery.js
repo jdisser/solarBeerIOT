@@ -78,10 +78,10 @@ function Battery(){
     
     this.setCycles = function(currentState) {
         // set entry in lastStates[]
-        console.log('currentState: '+currentState);
+
         lastStates.pop();
         lastStates.unshift(currentState);
-//        var debstate = this.chargeState;    //start with the debounce = current state
+
         
         var votes = [0,0,0];
         var debState;
@@ -115,10 +115,7 @@ function Battery(){
             break;
             
           }
-          console.log('i: ' + i);
-          console.log('votes: ' + votes);
-          console.log('lastStates: ' + lastStates);
-          console.log('debState: ' + debState);
+
         }
         
         if (debState !== this.chargeState){                 // if debState != to chargeState then a new state is starting
@@ -134,11 +131,7 @@ function Battery(){
                         this.dischargeStat.min = this.batCharge;
                         
                     }
-                    console.log('n: '+ this.dischargeStat.n);
-                    console.log('sum: '+ this.dischargeStat.sum);
-                    console.log('last: '+ this.dischargeStat.last);
-                    console.log('avg: '+ this.dischargeStat.avg);
-                    console.log('min: '+ this.dischargeStat.min);
+
                 }
                 
                 this.chargeState = 1;                       //update the state AFTER triggering the statistics!!!
@@ -148,7 +141,7 @@ function Battery(){
                 
             }
         }
-        console.log('Charge State: ' + this.chargeState);
+
     };
 
     this.chargeBatV = function(ah){
@@ -176,8 +169,7 @@ function Battery(){
         if (this.batV > this.voltage.max){
             this.voltage.max = this.batV;
         }
-        console.log('deltaV: '+deltaV);
-        console.log('batV: '+this.batV);
+
         this.setCycles(currentState);
     }
     
