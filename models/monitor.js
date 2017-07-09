@@ -1,3 +1,10 @@
+'use strict';
+
+var moment = require('moment');
+var Battery = require('./battery.js');
+var Panel = require('./panel.js');
+var Load = require('./load.js');
+
 /*
 * Monitor creates a battery monitor to source simulation data to be persisted
 * it creates a battery, panel and load
@@ -5,6 +12,9 @@
 ***/
 
 function Monitor(){
+  
+    var now = moment();
+  
     this.battery = new Battery();
     this.panel = new Panel();
     this.load = new Load();
@@ -59,7 +69,7 @@ function Monitor(){
     *  using the data from the config file
     **/
     this.initMonitor = function(){
-        
+      console.log('Initializing monitor code is running');  
     };
     
     var genBatData = function(){
@@ -86,3 +96,5 @@ function Monitor(){
         
     };
 }
+
+module.exports = Monitor;
