@@ -8,6 +8,9 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
+      timeIndex: {
+        type: Sequelize.DECIMAL(8,0)
+      },
       batV: {
         type: Sequelize.DECIMAL(8,0)
       },
@@ -17,16 +20,10 @@ module.exports = {
       batP: {
         type: Sequelize.DECIMAL(8,0)
       },
-      batE: {
-        type: Sequelize.DECIMAL(8,0)
-      },
-      batC: {
-        type: Sequelize.DECIMAL(8,0)
-      },
       batQ: {
         type: Sequelize.DECIMAL(8,0)
       },
-      timeIndex: {
+      batC: {
         type: Sequelize.DECIMAL(8,0)
       },
       createdAt: {

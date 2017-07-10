@@ -25,34 +25,35 @@ function Monitor(){
     this.interval = moment.duration(this.minutes,'minutes'); //a duration equal to minutes
     this.simDuration;               //a duration equal to the length of the simulation
     this.stopTime;                  //a moment equal to the time the simulation ends
+    this.totalEoutLast = 0;         //total at the last solar cycle
     
-    function BatteryData() {
-      this.timeIndex = 0;
-      this.batV = 0;
-      this.batI = 0;
-      this.batP = 0;
-      this.batE = 0;
-      this.bQtotal = 0;
-      this.bC = 0;
+    function BatteryData() {          //Battery Properties
+      this.timeIndex = 0;             //= timestamp
+      this.batV = 0;                  //batV
+      this.batI = 0;                  //batI
+      this.batP = 0;                  //batP
+      this.batQ = 0;                  //batCharge
+      this.batC = 0;                  //percentCharge
     };
     
-    var batteryRecords = [];
+    var batteryRecords = [];          //array of objects to create db records
     
-    function SystemData() {
-      this.timeIndex = 0;
-      this.eCharged = 0;
-      this.eDischarged = 0;
-      this.ahCumulative = 0;
-      this.vBatMin = 0;
-      this.vBatMax = 0;
-      this.minDischarge = 0;
-      this.lastDischarge = 0;
-      this.avgDischarge = 0;
-      this.discharges = 0;
-      this.cycles = 0;
+    function SystemData() {           //these statistics are recorded once per solar cycle
+      this.timeIndex = 0;             //= timestamp
+      this.totalEin = 0;              //energy.charge
+      this.totalEout = 0;             //energy.discharge
+      this.ahCumulative = 0;          //ahCumulative
+      this.ahConsumed = 0;            // = totalEout - totalEoutLast
+      this.batVmin = 0;               //voltage.max
+      this.batVmax = 0;               //voltage.min
+      this.minDischarge = 0;          //dischargeStat.min
+      this.lastDischarge = 0;         //dischargeStat.last
+      this.avgDischarge = 0;          //dischargeStat.avg
+      this.discharges = 0;            //dischargeStat.n
+      this.cycles = 0;                //= the number of solar days
     }
     
-    var sysRecords = [];
+    var sysRecords = [];              //array of objects to create db records
 
  
     var timeStamp = function (moment){

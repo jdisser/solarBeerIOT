@@ -22,6 +22,8 @@ function Battery(){
     this.chargeState = 0;           //battery is initially not charging or discharging
     
     this.batV = 12700;              //battery voltage in mV
+    this.batI = 0;                  //battery current in ma
+    this.batP = 0;                  //battery power in W
     this.batCapacity = 220000;      //capacity in mAH
     this.batCharge = 176000;        //battery charge initially at 80% for simulation
     this.percentCharge = 80;        //charge level in percent
@@ -56,7 +58,9 @@ function Battery(){
 
       this.chargeState = 0;
 
-      this.batV = 12700;              
+      this.batV = 12700;
+      this.batI = 0;
+      this.batP = 0;
       this.batCapacity = 220000;     
       this.batCharge = 176000;        
       this.percentCharge = 80;
@@ -186,6 +190,8 @@ function Battery(){
     
     this.charge = function(iIn, duration){
         var ah = ampHours(iIn, duration);
+        this.batI = iIn;
+        this.batP = this.batI * this.batV / 1000000;
         if (this.batCharge <= (this.batCapacity - ah)) {
             this.batCharge += ah;
             this.chargeBatV(ah);
@@ -196,6 +202,8 @@ function Battery(){
     
     this.discharge = function(iOut, duration){
         var ah = ampHours(iOut, duration);
+        this.batI = iOut;
+        this.batP = this.batI * this.batV / 1000000;
         if (this.batCharge > ah) {
             this.batCharge -= ah;
             this.chargeBatV(-ah);

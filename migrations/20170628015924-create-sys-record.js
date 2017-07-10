@@ -17,10 +17,10 @@ module.exports = {
       totalEout: {
         type: Sequelize.DECIMAL(10,0)
       },
-      totalPin: {
+      ahCumululative: {
         type: Sequelize.DECIMAL(10,0)
       },
-      totalPout: {
+      ahConsumed: {
         type: Sequelize.DECIMAL(10,0)
       },
       batVmin: {
@@ -29,16 +29,13 @@ module.exports = {
       batVmax: {
         type: Sequelize.DECIMAL(8,0)
       },
-      batTfull: {
-        type: Sequelize.DECIMAL(8,0)
-      },
       minDischarge: {
         type: Sequelize.DECIMAL(8,0)
       },
-      avgDischarge: {
+      lastDischarge: {
         type: Sequelize.DECIMAL(8,0)
       },
-      lastDischarge: {
+      avgDischarge: {
         type: Sequelize.DECIMAL(8,0)
       },
       discharges: {
