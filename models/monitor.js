@@ -57,7 +57,7 @@ function Monitor(){
     this.sysRecords = [];              //array of objects to create db records
 
  
-    var timeStamp = function (moment){
+    this.timeStamp = function (moment){
         var tString = moment.format('X');
         var tStamp = parseInt(tString);
         return tStamp;
@@ -90,9 +90,7 @@ function Monitor(){
       this.now = moment();
       this.stopTime = moment(this.now);
       var cycle = moment(this.now).endOf('day');    //used to trigger cycle data using #isAfter
-      var cycles = 0;                               //this is used as the index into the systemData array
-      var current = 0;
-      this.count = 0;
+
       
       for (var i = 1; i <= n ; ++i){
         this.stopTIme.add(this.interval);
@@ -106,30 +104,66 @@ function Monitor(){
       //the time of day is used to model the angle of the sun on the panels
       //but moments are used for other time related functions such as daily cycles
       //and durations are used for lengths of time such as charging periods
+      
+      //initialize the loop
+      var cycles = 0;                               //this is used as the index into the systemData array
+      var current = 0;
+      this.count = 0;
       var loops = 0;
+      var totalEoutLast = 0;
       while (this.now.isBefore(this.stopTime)){
 
-          //code for generating the data record within the Monitor goes here
+
           //first determine the charge/load current
           current = this.panel.getOutput(this.now);
           current -= this.load.getLoadI();
+
           //then charge or discharge the battery
           if (current >== 0){
             this.battery.charge(current, this.interval);
           } else {
             this.battery.discharge(current, this.interval);
           }
+
           //check to see if it's past midnight and if so generate the daily statistics
           if (this.now.isAfter(cycle)){
-            //code to generate the systemData on each cycle
+            
+            //generate a new sysRecord for the daily statistics
             
             this.sysRecords[cycles] = new SystemData();   //cycles are /day != loops /interval!!!
-            //code to populate the object here
+
+            //populate the SystemData object here
+            this.sysRecords[cycles].timeIndex = this.timeStamp(now);                        //= timestamp
+            this.sysRecords[cycles].totalEin = this.battery.energy.charge;                  //energy.charge
+            this.sysRecords[cycles].totalEout = this.battery.energy.discharge;              //energy.discharge
+            this.sysRecords[cycles].ahCumulative = this.battery.ahCumulative;               //ahCumulative
+            this.sysRecords[cycles].ahConsumed = this.sysRecords[cycles].totalEout - totalEoutLast;            // = totalEout - totalEoutLast
+            this.sysRecords[cycles].batVmin = this.battery.voltage.max;                     //voltage.max
+            this.sysRecords[cycles].batVmax = this.battery.voltage.min;                     //voltage.min
+            this.sysRecords[cycles].minDischarge = this.battery.dischargeStat.min;          //dischargeStat.min
+            this.sysRecords[cycles].lastDischarge = this.battery.dischargeStat.last;        //dischargeStat.last
+            this.sysRecords[cycles].avgDischarge = this.battery.dischargeStat.avg;          //dischargeStat.avg
+            this.sysRecords[cycles].discharges = this.battery.dischargeStat.n;              //dischargeStat.n
+            this.sysRecords[cycles].cycles = cycles;                                        //= the number of solar days (passes thru this procedure)
+
+            totalEoutLast = this.sysRecords[cycles].totalEout;  //store the last energy total
             ++cycles;                                   
             cycle = moment(this.now).endOf('day');        //reset the next trigger
           }
+
           //generate the battery data object
           this.batteryRecords[loops] = new BatteryData();
+    
+          //populate the new object with the battery data
+                                                                                  //Battery Properties
+          this.batteryRecords[loops].timeIndex = this.timeStamp(now);              //= timestamp
+          this.batteryRecords[loops].batV = this.battery.batV;                    //batV
+          this.batteryRecords[loops].batI = this.battery.batI;                    //batI
+          this.batteryRecords[loops].batP = this.battery.batP;                    //batP
+          this.batteryRecords[loops].batQ = this.battery.batCharge;               //batCharge
+          this.batteryRecords[loops].batC = this.battery.percentCharge;           //percentCharge
+    
+    
     
           this.now.add(this.interval); //iterate the time loop here
           
