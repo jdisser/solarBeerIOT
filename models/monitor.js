@@ -27,6 +27,7 @@ function Monitor(){
     this.stopTime;                  //a moment equal to the time the simulation ends
     this.totalEoutLast = 0;         //total at the last solar cycle
     
+    
     function BatteryData() {          //Battery Properties
       this.timeIndex = 0;             //= timestamp
       this.batV = 0;                  //batV
@@ -36,7 +37,7 @@ function Monitor(){
       this.batC = 0;                  //percentCharge
     };
     
-    var batteryRecords = [];          //array of objects to create db records
+    this.batteryRecords = [];          //array of objects to create db records
     
     function SystemData() {           //these statistics are recorded once per solar cycle
       this.timeIndex = 0;             //= timestamp
@@ -53,7 +54,7 @@ function Monitor(){
       this.cycles = 0;                //= the number of solar days
     }
     
-    var sysRecords = [];              //array of objects to create db records
+    this.sysRecords = [];              //array of objects to create db records
 
  
     var timeStamp = function (moment){
@@ -84,18 +85,58 @@ function Monitor(){
 * is returned. (is this the best way to return multiple objects?)
 *
 ***/
-      this.genData = function(n){
-      //This is the time loop...
+    this.genData = function(n){
+        
+      this.now = moment();
+      this.stopTime = moment(this.now);
+      var cycle = moment(this.now).endOf('day');    //used to trigger cycle data using #isAfter
+      var cycles = 0;                               //this is used as the index into the systemData array
+      var current = 0;
+      this.count = 0;
+      
+      for (var i = 1; i <= n ; ++i){
+        this.stopTIme.add(this.interval);
+        ++this.count;                               //count is redundant and used for debug & error
+      }
+      
+
+      
+      //This is the time based loop...
+      //the loops iterates thru moments that simulate the passage of time
+      //the time of day is used to model the angle of the sun on the panels
+      //but moments are used for other time related functions such as daily cycles
+      //and durations are used for lengths of time such as charging periods
       var loops = 0;
       while (this.now.isBefore(this.stopTime)){
-          ++loops;
+
+          //code for generating the data record within the Monitor goes here
+          //first determine the charge/load current
+          current = this.panel.getOutput(this.now);
+          current -= this.load.getLoadI();
+          //then charge or discharge the battery
+          if (current >== 0){
+            this.battery.charge(current, this.interval);
+          } else {
+            this.battery.discharge(current, this.interval);
+          }
+          //check to see if it's past midnight and if so generate the daily statistics
+          if (this.now.isAfter(cycle)){
+            //code to generate the systemData on each cycle
+            
+            this.sysRecords[cycles] = new SystemData();   //cycles are /day != loops /interval!!!
+            //code to populate the object here
+            ++cycles;                                   
+            cycle = moment(this.now).endOf('day');        //reset the next trigger
+          }
+          //generate the battery data object
+          this.batteryRecords[loops] = new BatteryData();
+    
+          this.now.add(this.interval); //iterate the time loop here
+          
+          ++loops;                      //loops is the index into the battery array
           if (loops > this.count) {
           break;
           }
-    
-          //code for generating data records within the Monitor goes here    
-    
-          this.now.add(this.interval); //iterate the time loop here
       }
       
     };
