@@ -76,21 +76,22 @@ function Monitor(){
     };
     
     
-/*    
-* genData creates n battery data records and a system record
-* for each time the simulation passes midnight plus an initial
-* record with the status of the system data after the first
-* simulation call to the battery object.
-* The records are stored in two arrays as objects and each array
-* is returned. (is this the best way to return multiple objects?)
-*
-***/
+    /*    
+    * genData creates n battery data records and a system record
+    * for each time the simulation passes midnight plus an initial
+    * record with the status of the system data after the first
+    * simulation call to the battery object.
+    * The records are stored in two arrays as objects and each array
+    * is returned. (is this the best way to return multiple objects?)
+    *
+    ***/
     this.genData = function(n){
         
       this.now = moment();
       this.stopTime = moment(this.now);
       var cycle = moment(this.now).endOf('day');    //used to trigger cycle data using #isAfter
 
+      this.count = 0;
       
       for (var i = 1; i <= n ; ++i){
         this.stopTIme.add(this.interval);
@@ -108,7 +109,7 @@ function Monitor(){
       //initialize the loop
       var cycles = 0;                               //this is used as the index into the systemData array
       var current = 0;
-      this.count = 0;
+
       var loops = 0;
       var totalEoutLast = 0;
       while (this.now.isBefore(this.stopTime)){
@@ -147,8 +148,8 @@ function Monitor(){
             this.sysRecords[cycles].cycles = cycles;                                        //= the number of solar days (passes thru this procedure)
 
             totalEoutLast = this.sysRecords[cycles].totalEout;  //store the last energy total
-            ++cycles;                                   
-            cycle = moment(this.now).endOf('day');        //reset the next trigger
+            ++cycles;                                           //increment the array index                                   
+            cycle = moment(this.now).endOf('day');              //reset the next trigger
           }
 
           //generate the battery data object
@@ -165,14 +166,15 @@ function Monitor(){
     
     
     
-          this.now.add(this.interval); //iterate the time loop here
+          this.now.add(this.interval);    //iterate the time loop here
           
-          ++loops;                      //loops is the index into the battery array
-          if (loops > this.count) {
+          ++loops;                        //loops is the index into the battery array
+          
+          if (loops > this.count) {       //this should not execute!
           break;
           }
       }
-      
+    return loops;                         //for test should equal n  
     };
 }
 
