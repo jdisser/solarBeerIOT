@@ -13,7 +13,7 @@ var Load = require('./load.js');
 
 function Monitor(){
   
-    var now = moment();
+    this.now = moment();
   
     this.battery = new Battery();
     this.panel = new Panel();
@@ -72,7 +72,7 @@ function Monitor(){
     *  using the data from the config file
     **/
     this.initMonitor = function(){
-      console.log('Initializing monitor code is running');  
+      console.log('Initializing monitor model');  
     };
     
     
@@ -87,14 +87,17 @@ function Monitor(){
     ***/
     this.genData = function(n){
         
-      this.now = moment();
+      this.now = moment().utcOffset(-4);            //this is only true during DST use moment-timezone for full TZ function
+ 
+ 
       this.stopTime = moment(this.now);
+ 
       var cycle = moment(this.now).endOf('day');    //used to trigger cycle data using #isAfter
 
       this.count = 0;
       
       for (var i = 1; i <= n ; ++i){
-        this.stopTIme.add(this.interval);
+        this.stopTime.add(this.interval);
         ++this.count;                               //count is redundant and used for debug & error
       }
       
@@ -117,13 +120,16 @@ function Monitor(){
 
           //first determine the charge/load current
           current = this.panel.getOutput(this.now);
+
           current -= this.load.getLoadI();
 
           //then charge or discharge the battery
-          if (current >== 0){
+          if (current >= 0){
             this.battery.charge(current, this.interval);
+
           } else {
             this.battery.discharge(current, this.interval);
+
           }
 
           //check to see if it's past midnight and if so generate the daily statistics
@@ -134,7 +140,7 @@ function Monitor(){
             this.sysRecords[cycles] = new SystemData();   //cycles are /day != loops /interval!!!
 
             //populate the SystemData object here
-            this.sysRecords[cycles].timeIndex = this.timeStamp(now);                        //= timestamp
+            this.sysRecords[cycles].timeIndex = this.timeStamp(this.now);                   //= timestamp
             this.sysRecords[cycles].totalEin = this.battery.energy.charge;                  //energy.charge
             this.sysRecords[cycles].totalEout = this.battery.energy.discharge;              //energy.discharge
             this.sysRecords[cycles].ahCumulative = this.battery.ahCumulative;               //ahCumulative
@@ -147,9 +153,13 @@ function Monitor(){
             this.sysRecords[cycles].discharges = this.battery.dischargeStat.n;              //dischargeStat.n
             this.sysRecords[cycles].cycles = cycles;                                        //= the number of solar days (passes thru this procedure)
 
+            console.log(this.sysRecords[cycles]);
+
             totalEoutLast = this.sysRecords[cycles].totalEout;  //store the last energy total
             ++cycles;                                           //increment the array index                                   
             cycle = moment(this.now).endOf('day');              //reset the next trigger
+            
+            
           }
 
           //generate the battery data object
@@ -157,13 +167,14 @@ function Monitor(){
     
           //populate the new object with the battery data
                                                                                   //Battery Properties
-          this.batteryRecords[loops].timeIndex = this.timeStamp(now);              //= timestamp
+          this.batteryRecords[loops].timeIndex = this.timeStamp(this.now);        //= timestamp
           this.batteryRecords[loops].batV = this.battery.batV;                    //batV
           this.batteryRecords[loops].batI = this.battery.batI;                    //batI
           this.batteryRecords[loops].batP = this.battery.batP;                    //batP
           this.batteryRecords[loops].batQ = this.battery.batCharge;               //batCharge
           this.batteryRecords[loops].batC = this.battery.percentCharge;           //percentCharge
     
+          console.log(this.batteryRecords[loops]);
     
     
           this.now.add(this.interval);    //iterate the time loop here

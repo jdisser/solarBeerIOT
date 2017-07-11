@@ -17,11 +17,28 @@ describe('Monitor Model', function(){
     it('Should initialize the load', function(){
       expect(monitor.load.iRandom).to.equal(200);
     });
-  });
-  // describe('Output',function(){
     
-  //   before(function(){
-  //     now = moment();
-  //   });
-  // });
+    it('Should initialize the battery', function(){
+      expect(monitor.battery.batV).to.equal(12700);
+    });
+    
+    it('Should initialize the panel', function(){
+      expect(monitor.panel.capacity).to.equal(20000);
+    });
+  });
+  describe('Data record generation',function(){
+    
+    before(function(){
+      monitor.initMonitor();
+      monitor.genData(12);
+    });
+    
+    it('Should Generate 12 batteryRecords', function(){
+      expect(monitor.batteryRecords.length).to.equal(12);
+    });
+    
+    it('Should Generate 1 sysRecords', function(){
+      expect(monitor.sysRecords.length).to.equal(1);
+    });
+  });
 });
