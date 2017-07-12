@@ -17,7 +17,7 @@ module.exports = {
       totalEout: {
         type: Sequelize.DECIMAL(10,0)
       },
-      ahCumululative: {
+      ahCumulative: {
         type: Sequelize.DECIMAL(10,0)
       },
       ahConsumed: {

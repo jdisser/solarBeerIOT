@@ -4,7 +4,6 @@ module.exports = function(sequelize, DataTypes) {
     batV: DataTypes.DECIMAL,
     batI: DataTypes.DECIMAL,
     batP: DataTypes.DECIMAL,
-    batE: DataTypes.DECIMAL,
     batC: DataTypes.DECIMAL,
     batQ: DataTypes.DECIMAL,
     timeIndex: DataTypes.DECIMAL

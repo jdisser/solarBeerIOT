@@ -4,11 +4,10 @@ module.exports = function(sequelize, DataTypes) {
     timeIndex: DataTypes.DECIMAL,
     totalEin: DataTypes.DECIMAL,
     totalEout: DataTypes.DECIMAL,
-    totalPin: DataTypes.DECIMAL,
-    totalPout: DataTypes.DECIMAL,
+    ahCumulative: DataTypes.DECIMAL,
+    ahConsumed: DataTypes.DECIMAL
     batVmin: DataTypes.DECIMAL,
     batVmax: DataTypes.DECIMAL,
-    batTfull: DataTypes.DECIMAL,
     minDischarge: DataTypes.DECIMAL,
     avgDischarge: DataTypes.DECIMAL,
     lastDischarge: DataTypes.DECIMAL,
