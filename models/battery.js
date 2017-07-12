@@ -188,7 +188,7 @@ function Battery(){
     }
     
     
-    this.charge = function(iIn, duration){
+    this.charge = function(iIn, duration){  //current is positive flowing into the battery
         var ah = ampHours(iIn, duration);
         this.batI = iIn;
         this.batP = this.batI * this.batV / 1000000;
@@ -200,15 +200,16 @@ function Battery(){
         }
     }
     
-    this.discharge = function(iOut, duration){
-        var ah = ampHours(iOut, duration);
-        this.batI = iOut;
+    this.discharge = function(iOut, duration){  //current is positive flowing out of the battery
+       
+        var ah = ampHours(iOut, duration);              //ah is positive here for discharge
+        this.batI = -iOut;
         this.batP = this.batI * this.batV / 1000000;
         if (this.batCharge > ah) {
             this.batCharge -= ah;
-            this.chargeBatV(-ah);
+            this.chargeBatV(-ah);                       //ah negative here for correct V adjustment
             this.percentCharge = this.batPercent();
-            this.ahCumulative += ah;
+            this.ahCumulative += ah;                    //cumulative discharge requires +ah
             return ah;
         }
     }

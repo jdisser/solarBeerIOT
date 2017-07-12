@@ -128,7 +128,7 @@ function Monitor(){
             this.battery.charge(current, this.interval);
 
           } else {
-            this.battery.discharge(current, this.interval);
+            this.battery.discharge(Math.abs(current), this.interval);   //pass the discharge current as a positive value
 
           }
 
