@@ -145,15 +145,15 @@ function Monitor(){
             this.sysRecords[cycles].totalEout = this.battery.energy.discharge;              //energy.discharge
             this.sysRecords[cycles].ahCumulative = this.battery.ahCumulative;               //ahCumulative
             this.sysRecords[cycles].ahConsumed = this.sysRecords[cycles].totalEout - totalEoutLast;            // = totalEout - totalEoutLast
-            this.sysRecords[cycles].batVmin = this.battery.voltage.max;                     //voltage.max
-            this.sysRecords[cycles].batVmax = this.battery.voltage.min;                     //voltage.min
+            this.sysRecords[cycles].batVmin = this.battery.voltage.min;                     //voltage.max
+            this.sysRecords[cycles].batVmax = this.battery.voltage.max;                     //voltage.min
             this.sysRecords[cycles].minDischarge = this.battery.dischargeStat.min;          //dischargeStat.min
             this.sysRecords[cycles].lastDischarge = this.battery.dischargeStat.last;        //dischargeStat.last
             this.sysRecords[cycles].avgDischarge = this.battery.dischargeStat.avg;          //dischargeStat.avg
             this.sysRecords[cycles].discharges = this.battery.dischargeStat.n;              //dischargeStat.n
             this.sysRecords[cycles].cycles = cycles;                                        //= the number of solar days (passes thru this procedure)
 
-            console.log(this.sysRecords[cycles]);
+           
 
             totalEoutLast = this.sysRecords[cycles].totalEout;  //store the last energy total
             ++cycles;                                           //increment the array index                                   
@@ -174,7 +174,7 @@ function Monitor(){
           this.batteryRecords[loops].batQ = this.battery.batCharge;               //batCharge
           this.batteryRecords[loops].batC = this.battery.percentCharge;           //percentCharge
     
-          console.log(this.batteryRecords[loops]);
+      
     
     
           this.now.add(this.interval);    //iterate the time loop here

@@ -24,7 +24,7 @@ function Panel() {
         const ninetyDeg = Math.PI/2;
         var highNoon = moment(now).hour('12');
         var diff = highNoon.diff(now, 'minutes');
-        console.log('diff: ' + diff);
+        
             
         if (diff >= -360 && diff <= 360){
             return this.capacity * Math.cos(diff/360*ninetyDeg);

@@ -131,7 +131,7 @@ function Battery(){
             if (debState === 1) {                           //the discharge or init cycle is ending here
                     
                 if (this.chargeState === 2){                    //service the discharge object if discharge ending
-                                                                
+                  
                     this.dischargeStat.n++;                     //increment the number of discharge cycles
                     this.dischargeStat.sum += this.batCharge;   //add to the sum (BIG NUMBER!!)
                     this.dischargeStat.last = this.batCharge;   //store the last discharge level

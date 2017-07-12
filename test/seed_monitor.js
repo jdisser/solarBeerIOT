@@ -30,15 +30,15 @@ describe('Monitor Model', function(){
     
     before(function(){
       monitor.initMonitor();
-      monitor.genData(12);
+      monitor.genData(36);
     });
     
-    it('Should Generate 12 batteryRecords', function(){
-      expect(monitor.batteryRecords.length).to.equal(12);
+    it('Should Generate 36 batteryRecords', function(){
+      expect(monitor.batteryRecords.length).to.equal(36);
     });
     
-    it('Should Generate 1 sysRecords', function(){
-      expect(monitor.sysRecords.length).to.equal(1);
+    it('Should Generate 2 sysRecords', function(){
+      expect(monitor.sysRecords.length).to.equal(2);
     });
   });
 });
