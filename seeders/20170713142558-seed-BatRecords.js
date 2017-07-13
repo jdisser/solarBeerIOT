@@ -1,26 +1,17 @@
 'use strict';
 
 module.exports = {
+  var Monitor = require('../models/monitor.js');
+  this.monitor = new Monitor();
   up: function (queryInterface, Sequelize) {
-    /*
-      Add altering commands here.
-      Return a promise to correctly handle asynchronicity.
 
-      Example:
-      return queryInterface.bulkInsert('Person', [{
-        name: 'John Doe',
-        isBetaMember: false
-      }], {});
-    */
+    this.monitor.genData(48);
+    var batRecords = this.monitor.batteryRecords;
+    return queryInterface.bulkInsert('BatRecords', batRecords, {});
   },
 
   down: function (queryInterface, Sequelize) {
-    /*
-      Add reverting commands here.
-      Return a promise to correctly handle asynchronicity.
 
-      Example:
-      return queryInterface.bulkDelete('Person', null, {});
-    */
+    return queryInterface.bulkDelete('BatRecords', null, {});
   }
 };

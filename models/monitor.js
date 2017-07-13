@@ -29,17 +29,21 @@ function Monitor(){
     
     
     function BatteryData() {          //Battery Properties
+      this.id = 0;                    //db index needed for DB bulkInsert
       this.timeIndex = 0;             //= timestamp
       this.batV = 0;                  //batV
       this.batI = 0;                  //batI
       this.batP = 0;                  //batP
       this.batQ = 0;                  //batCharge
       this.batC = 0;                  //percentCharge
+      this.createdAt;                 //for bulkInsert
+      this.updatedAt;                 //for bulkInsert
     };
     
     this.batteryRecords = [];          //array of objects to create db records
     
     function SystemData() {           //these statistics are recorded once per solar cycle
+      this.id = 0;  
       this.timeIndex = 0;             //= timestamp
       this.totalEin = 0;              //energy.charge
       this.totalEout = 0;             //energy.discharge
@@ -52,6 +56,8 @@ function Monitor(){
       this.avgDischarge = 0;          //dischargeStat.avg
       this.discharges = 0;            //dischargeStat.n
       this.cycles = 0;                //= the number of solar days
+      this.createdAt;
+      this.updatedAt;
     }
     
     this.sysRecords = [];              //array of objects to create db records
@@ -115,6 +121,7 @@ function Monitor(){
 
       var loops = 0;
       var totalEoutLast = 0;
+      var timeNow = 0;
       while (this.now.isBefore(this.stopTime)){
 
 
@@ -132,26 +139,32 @@ function Monitor(){
 
           }
 
+          timeNow = this.timeStamp(this.now);                           //number of milliseconds eq Unix format same as Data.now()
+
           //check to see if it's past midnight and if so generate the daily statistics
           if (this.now.isAfter(cycle)){
             
             //generate a new sysRecord for the daily statistics
             
-            this.sysRecords[cycles] = new SystemData();   //cycles are /day != loops /interval!!!
+            this.sysRecords.push({   //cycles are /day != loops /interval!!!
 
-            //populate the SystemData object here
-            this.sysRecords[cycles].timeIndex = this.timeStamp(this.now);                   //= timestamp
-            this.sysRecords[cycles].totalEin = this.battery.energy.charge;                  //energy.charge
-            this.sysRecords[cycles].totalEout = this.battery.energy.discharge;              //energy.discharge
-            this.sysRecords[cycles].ahCumulative = this.battery.ahCumulative;               //ahCumulative
-            this.sysRecords[cycles].ahConsumed = this.sysRecords[cycles].totalEout - totalEoutLast;            // = totalEout - totalEoutLast
-            this.sysRecords[cycles].batVmin = this.battery.voltage.min;                     //voltage.max
-            this.sysRecords[cycles].batVmax = this.battery.voltage.max;                     //voltage.min
-            this.sysRecords[cycles].minDischarge = this.battery.dischargeStat.min;          //dischargeStat.min
-            this.sysRecords[cycles].lastDischarge = this.battery.dischargeStat.last;        //dischargeStat.last
-            this.sysRecords[cycles].avgDischarge = this.battery.dischargeStat.avg;          //dischargeStat.avg
-            this.sysRecords[cycles].discharges = this.battery.dischargeStat.n;              //dischargeStat.n
-            this.sysRecords[cycles].cycles = cycles;                                        //= the number of solar days (passes thru this procedure)
+              //populate the SystemData object here
+              id: cycles,                                            //db index key
+              timeIndex: timeNow,                                    //= timestamp
+              totalEin: this.battery.energy.charge,                  //energy.charge
+              totalEout: this.battery.energy.discharge,              //energy.discharge
+              ahCumulative: this.battery.ahCumulative,               //ahCumulative
+              ahConsumed: this.battery.energy.discharge - totalEoutLast,            // = totalEout - totalEoutLast
+              batVmin: this.battery.voltage.min,                     //voltage.max
+              batVmax: this.battery.voltage.max,                     //voltage.min
+              minDischarge: this.battery.dischargeStat.min,          //dischargeStat.min
+              lastDischarge: this.battery.dischargeStat.last,        //dischargeStat.last
+              avgDischarge: this.battery.dischargeStat.avg,          //dischargeStat.avg
+              discharges: this.battery.dischargeStat.n,              //dischargeStat.n
+              cycles: cycles,                                        //= the number of solar days (passes thru this procedure)
+              createdAt: timeNow,                                    //db req field
+              updatedAt: timeNow                                     //db req field
+            });
 
            
 
@@ -162,19 +175,20 @@ function Monitor(){
             
           }
 
-          //generate the battery data object
-          this.batteryRecords[loops] = new BatteryData();
-    
-          //populate the new object with the battery data
-                                                                                  //Battery Properties
-          this.batteryRecords[loops].timeIndex = this.timeStamp(this.now);        //= timestamp
-          this.batteryRecords[loops].batV = this.battery.batV;                    //batV
-          this.batteryRecords[loops].batI = this.battery.batI;                    //batI
-          this.batteryRecords[loops].batP = this.battery.batP;                    //batP
-          this.batteryRecords[loops].batQ = this.battery.batCharge;               //batCharge
-          this.batteryRecords[loops].batC = this.battery.percentCharge;           //percentCharge
-    
-      
+          //generate the battery data object and add it to the array
+          this.batteryRecords.push({
+                                                        //Battery Properties
+            id: loops,
+            timeIndex: this.timeStamp(this.now),        //= timestamp
+            batV: this.battery.batV,                    //batV
+            batI: this.battery.batI,                    //batI
+            batP: this.battery.batP,                    //batP
+            batQ: this.battery.batCharge,               //batCharge
+            batC: this.battery.percentCharge,           //percentCharge
+            createdAt: timeNow,
+            updatedAt: timeNow
+          });
+
     
     
           this.now.add(this.interval);    //iterate the time loop here
@@ -185,7 +199,9 @@ function Monitor(){
           break;
           }
       }
-    return loops;                         //for test should equal n  
+    console.log(this.batteryRecords);
+    console.log(this.sysRecords);
+    return loops;                         //for test should equal n
     };
 }
 
