@@ -1,7 +1,10 @@
+'use strict';
+
 let seed;
 
 if(process.env.NODE_ENV !== 'production') {
 //  require('dotenv-safe').config() // environment variables, used for hiding secrets
+  console.log('Not in production mode');
   seed = require('./seedquelize.js');
 }
 
@@ -10,7 +13,10 @@ const bodyParser = require('body-parser');
 const Sequelize = require('sequelize');
 
 // Connect to a sql database
-const sequelize = new Sequelize('../database/solarbeer.db');
+const sequelize = new Sequelize('solarbeer.db', '', '', { 
+  dialect: 'sqlite',
+  storage: '../database/solarbeer.db'
+});
 
 
 
@@ -18,81 +24,33 @@ const sequelize = new Sequelize('../database/solarbeer.db');
 sequelize.import('../models/batrecord.js');
 sequelize.import('../models/sysrecord.js');
 
-
-
-
-/* from original repo
-const Artist = sequelize.define('artist', {
-  name: {
-    type: Sequelize.STRING,
-    field: 'name'
-  },
-  genre: {
-    type: Sequelize.STRING,
-    field: 'genre'
-  }
-});
-
-const User = sequelize.define('user', {
-  username: {
-    type: Sequelize.STRING,
-    field: 'username'
-  },
-  twitter: {
-    type: Sequelize.STRING,
-    field: 'twitter'
-  }
-});
-*/
-
+var Monitor = require('../models/monitor.js');
+var monitor = new Monitor();
 
 // This line saves your job by not deleting production data
 if(process.env.NODE_ENV !== 'production') {
   
+  //generate the data in the Monitor
+  monitor.initMonitor();
+  monitor.genData(36);
   // Clear out the existing database
-  sequelize.sync({force: true}).then(() => {
-    
-    // This shows the shape of the structure we are expecting.
-    // data is just an array of whatever models you want to create,
-    // model is of course the actual model you want created
-    
-    
-    const artists = {     //this is just a reference for the object in the array passed to seed
-      data: [             //this would be the Monitor array property
-        {
-          name: 'Andrea Bocelli',
-          genre: 'Opera'
-        },
-        {
-          name: 'Britney Spears',
-          genre: 'Pop'
-        },
-        {
-          name: 'Lee Morgan',
-          genre: 'Jazz'
-        }
-      ],
-      model: Artist         //this would be BatRecord from var in imported model
-    }
 
-    const users = {
-      data: [
-        {
-          username: 'jimthedev',
-          twitter: '@jimthedev'
-        },
-        {
-          username: 'jnessview',
-          twitter: 'JNessView'
-        }
-      ],
-      model: User
-    }
+  sequelize.sync({force: true}).then(() => {    //drops and recreates model tables ONLY!
+    
+    const batrecs = {};
+    batrecs.data = monitor.batteryRecords;
+    batrecs.model = sequelize.models.BatRecord;
+    
+    const sysrecs = {};
+    sysrecs.data = monitor.sysRecords;
+    sysrecs.model = sequelize.models.SysRecord;
+
+
 
     // Actually seed the database using seedquelize
     seed([
-      artists,
-      users
+      batrecs,
+      sysrecs
     ]).then(() =>{
       // Only started after seeding in dev/test
 //      startExpress();

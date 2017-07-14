@@ -5,7 +5,7 @@ module.exports = function(sequelize, DataTypes) {
     totalEin: DataTypes.DECIMAL,
     totalEout: DataTypes.DECIMAL,
     ahCumulative: DataTypes.DECIMAL,
-    ahConsumed: DataTypes.DECIMAL
+    ahConsumed: DataTypes.DECIMAL,
     batVmin: DataTypes.DECIMAL,
     batVmax: DataTypes.DECIMAL,
     minDischarge: DataTypes.DECIMAL,

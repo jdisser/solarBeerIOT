@@ -149,7 +149,7 @@ function Monitor(){
             this.sysRecords.push({   //cycles are /day != loops /interval!!!
 
               //populate the SystemData object here
-              id: cycles,                                            //db index key
+//              id: cycles,                                            //db index key
               timeIndex: timeNow,                                    //= timestamp
               totalEin: this.battery.energy.charge,                  //energy.charge
               totalEout: this.battery.energy.discharge,              //energy.discharge
@@ -162,8 +162,8 @@ function Monitor(){
               avgDischarge: this.battery.dischargeStat.avg,          //dischargeStat.avg
               discharges: this.battery.dischargeStat.n,              //dischargeStat.n
               cycles: cycles,                                        //= the number of solar days (passes thru this procedure)
-              createdAt: timeNow,                                    //db req field
-              updatedAt: timeNow                                     //db req field
+              // createdAt: timeNow,                                    //db req field
+              // updatedAt: timeNow                                     //db req field
             });
 
            
@@ -178,15 +178,15 @@ function Monitor(){
           //generate the battery data object and add it to the array
           this.batteryRecords.push({
                                                         //Battery Properties
-            id: loops,
+            // id: loops,
             timeIndex: this.timeStamp(this.now),        //= timestamp
             batV: this.battery.batV,                    //batV
             batI: this.battery.batI,                    //batI
             batP: this.battery.batP,                    //batP
             batQ: this.battery.batCharge,               //batCharge
             batC: this.battery.percentCharge,           //percentCharge
-            createdAt: timeNow,
-            updatedAt: timeNow
+            // createdAt: timeNow,
+            // updatedAt: timeNow
           });
 
     
