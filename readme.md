@@ -102,3 +102,7 @@ sequelize-cli. This code needs to run once for each table/seeder in the folder b
 
 The module to generate the data arrays for seeding the database is required by the seeders in each seeder seperately since it's not clear to me how to create a singlton
 within the sequelize-cli module and pass that to each seeder.
+
+##Generating Express in Git Branch
+
+This is the branch where I'll run the generator so nothing in Master will break!
