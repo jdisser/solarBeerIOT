@@ -102,3 +102,31 @@ sequelize-cli. This code needs to run once for each table/seeder in the folder b
 
 The module to generate the data arrays for seeding the database is required by the seeders in each seeder seperately since it's not clear to me how to create a singlton
 within the sequelize-cli module and pass that to each seeder.
+
+##Problems with Sequelize db:seed
+
+It appears that using db:seed is not fully reliable. Following the methods outlined here resulted in some odd results.
+In one case (one table) the seed ran but there weren't any changes to the database. In another the seed code had a typo
+and errored out, not unusual. But when the typo was corrected it again errored out and could not be restored by reloading
+the IDE. It might recover on rebooting but I didn't want to try that yet. Making a small change to the seed file that ran
+(with no result) created an error and then it too did not run again after the line was reverted back to it's original form!
+SO it appears that once an error occurs it can't be corrected. At this point, given the state of the documentation on seeding
+I decided to switch to a seeder script. This avoids the problem of running two seperate instances of the data generating model
+but is not as flexible as a good Sequelize based seeding system. It appears that there is some activity to upgrade the docs.
+It might be that this is a problem isolated to sqlite too (file based not URL based). I did run into problem along these lines
+when connecting to the database in the script while trying to use a file: type URI. So it looks like seeding is a work in
+process and I thought it best to avoid it now and move on with more beer code!
+
+##Generating Express in an exising project
+
+Looking to build from the bottom up the project started with installing and implementing a seeded database using Sequelize
+and Sqlite on Node.js running on the Beagle Bone Black Wireless. Not the easiest thing in the world, like most things. But
+this results in quite a bit of code in the project including models. Express does not have the concept of models and 
+usually is used in a stack with a non-sql database like Mongo. What fun is that? So since it doesn't persist data the auto
+generator doesn't create a models folder or overwrite the one in the project! But the same may not be true for the
+package.json file and possibly others. So to handle this and still use the auto generator I'm going to use GIT and merge
+and compare tools on github to make sure nothing breaks. The Big Idea is simple. Create two brnaches from Master, Testing and 
+addExpress. Use addExpress to generate the app and then attempt to do a merge into Testing. If all else fails Master remains
+unchanged. If it works then merge Testing into Master and go on from there. Just crazy enough to work! So here we are with
+this commit in the Testing branch that adds to this readme.
+
