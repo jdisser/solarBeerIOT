@@ -55,12 +55,8 @@ The plan to use the migrations and seeders is to create a script in the package.
 
 
 The most coherent explaination of the process to create and intialize the database can be found on this Stack Overflow question. Kinda scary building a production app using a module documented like this. This example uses
-umzug to run the migrations but the docs suggest that the ```db:migrate``` will do this. Otherwise this thread does a good job of presenting the concepts.
+umzug to run the migrations but the docs suggest that the ```db:migrate``` will do this. 
 
-[https://stackoverflow.com/questions/21105748/sequelize-js-how-to-use-migrations-and-sync](https://stackoverflow.com/questions/21105748/sequelize-js-how-to-use-migrations-and-sync)
-
-After this link the MD for titles stopped working, this line is checking to see if it's related to it being followed
-immediately by a title. If this line fixes the problem then that's it.
 
 ##Seeding The Database
 
@@ -106,7 +102,7 @@ sequelize-cli. This code needs to run once for each table/seeder in the folder b
 The module to generate the data arrays for seeding the database is required by the seeders in each seeder seperately since it's not clear to me how to create a singlton
 within the sequelize-cli module and pass that to each seeder.
 
-##Generating Express in Git Branch
+##Generating Express in a seperate Git Branch
 
 This is the branch where I'll run the generator so nothing in Master will break!
 In order to avoid a big mess I copied the package.json and package-lock.json files to duplicates
