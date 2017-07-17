@@ -19,15 +19,15 @@
   "dependencies": {
     "async": "^2.4.1",
     "body-parser": "^1.17.2",
+    "cookie-parser": "~1.4.3",
     "commander": "^2.9.0",
-    "cookie-parser": "^1.4.3",
     "debug": "~2.6.3",
-    "ejs": "^2.5.6",
     "express": "^4.15.3",
-    "morgan": "^1.8.1",
+    "ejs": "~2.5.6",
+    "morgan": "~1.8.1",
     "sequelize": "^4.0.0",
     "sequelize-cli": "^2.7.0",
-    "serve-favicon": "^2.4.3",
+    "serve-favicon": "~2.4.2",
     "sqlite3": "^3.1.8",
     "underscore": "^1.8.3"
   },
@@ -36,3 +36,4 @@
     "mocha": "*"
   }
 }
+
