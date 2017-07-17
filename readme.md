@@ -59,6 +59,9 @@ umzug to run the migrations but the docs suggest that the ```db:migrate``` will 
 
 [https://stackoverflow.com/questions/21105748/sequelize-js-how-to-use-migrations-and-sync](https://stackoverflow.com/questions/21105748/sequelize-js-how-to-use-migrations-and-sync)
 
+After this link the MD for titles stopped working, this line is checking to see if it's related to it being followed
+immediately by a title. If this line fixes the problem then that's it.
+
 ##Seeding The Database
 
 To create the models/tables I'm using the sequelize-cli tools and migrations. The naming convention I picked is for the models to be Capitialized-Singular and the tables to be named
@@ -106,3 +109,21 @@ within the sequelize-cli module and pass that to each seeder.
 ##Generating Express in Git Branch
 
 This is the branch where I'll run the generator so nothing in Master will break!
+In order to avoid a big mess I copied the package.json and package-lock.json files to duplicates
+and I'll merge these together by hand using a split screen editor in Cloud9.
+
+Speaking of Cloud9 it uses port 3000 which turns out to be a popular port and is
+also used by Express in the scaffolded app. To avoid bad things I hard coded the port
+to 4000 and hope that nothing important is using that too!
+
+After running the Express generator the following instructions are displayed
+
+DON"T EXECUTE THESE INSRTRUCTIONS YET!!!
+
+```install dependencies:```
+     ```$ cd . && npm install```
+
+   ```run the app:```
+     ```$ DEBUG=solarbeeriot:* npm start```
+     
+It would be a bad idea to do this BEFORE hand merging the package.json files.
