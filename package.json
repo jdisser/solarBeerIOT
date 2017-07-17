@@ -4,6 +4,7 @@
   "description": "IOT server and bridge for Solar Powered Beer!",
   "main": "index.js",
   "scripts": {
+    "start": "node ./bin/www",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
@@ -18,10 +19,15 @@
   "dependencies": {
     "async": "^2.4.1",
     "body-parser": "^1.17.2",
+    "cookie-parser": "~1.4.3",
     "commander": "^2.9.0",
+    "debug": "~2.6.3",
     "express": "^4.15.3",
+    "ejs": "~2.5.6",
+    "morgan": "~1.8.1",
     "sequelize": "^4.0.0",
     "sequelize-cli": "^2.7.0",
+    "serve-favicon": "~2.4.2",
     "sqlite3": "^3.1.8",
     "underscore": "^1.8.3"
   },
@@ -30,3 +36,4 @@
     "mocha": "*"
   }
 }
+

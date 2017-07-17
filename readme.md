@@ -55,9 +55,8 @@ The plan to use the migrations and seeders is to create a script in the package.
 
 
 The most coherent explaination of the process to create and intialize the database can be found on this Stack Overflow question. Kinda scary building a production app using a module documented like this. This example uses
-umzug to run the migrations but the docs suggest that the ```db:migrate``` will do this. Otherwise this thread does a good job of presenting the concepts.
+umzug to run the migrations but the docs suggest that the ```db:migrate``` will do this. 
 
-[https://stackoverflow.com/questions/21105748/sequelize-js-how-to-use-migrations-and-sync](https://stackoverflow.com/questions/21105748/sequelize-js-how-to-use-migrations-and-sync)
 
 ##Seeding The Database
 
@@ -103,6 +102,27 @@ sequelize-cli. This code needs to run once for each table/seeder in the folder b
 The module to generate the data arrays for seeding the database is required by the seeders in each seeder seperately since it's not clear to me how to create a singlton
 within the sequelize-cli module and pass that to each seeder.
 
+##Generating Express in a seperate Git Branch
+
+This is the branch where I'll run the generator so nothing in Master will break!
+In order to avoid a big mess I copied the package.json and package-lock.json files to duplicates
+and I'll merge these together by hand using a split screen editor in Cloud9.
+
+Speaking of Cloud9 it uses port 3000 which turns out to be a popular port and is
+also used by Express in the scaffolded app. To avoid bad things I hard coded the port
+to 4000 and hope that nothing important is using that too!
+
+After running the Express generator the following instructions are displayed
+
+DON"T EXECUTE THESE INSRTRUCTIONS YET!!!
+
+```install dependencies:```
+     ```$ cd . && npm install```
+
+   ```run the app:```
+     ```$ DEBUG=solarbeeriot:* npm start```
+     
+It would be a bad idea to do this BEFORE hand merging the package.json files.
 ##Problems with Sequelize db:seed
 
 It appears that using db:seed is not fully reliable. Following the methods outlined here resulted in some odd results.
