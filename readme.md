@@ -58,7 +58,7 @@ The most coherent explaination of the process to create and intialize the databa
 umzug to run the migrations but the docs suggest that the ```db:migrate``` will do this. 
 
 
-##Seeding The Database
+## Seeding The Database
 
 To create the models/tables I'm using the sequelize-cli tools and migrations. The naming convention I picked is for the models to be Capitialized-Singular and the tables to be named
 Capitalized-Plural. The tool alters the table naming by changing it to lowecase and pluralizing it in the migrations that it generates. Here are the commands that were used to create
@@ -102,7 +102,7 @@ sequelize-cli. This code needs to run once for each table/seeder in the folder b
 The module to generate the data arrays for seeding the database is required by the seeders in each seeder seperately since it's not clear to me how to create a singlton
 within the sequelize-cli module and pass that to each seeder.
 
-##Generating Express in a seperate Git Branch
+## Generating Express in a seperate Git Branch
 
 This is the branch where I'll run the generator so nothing in Master will break!
 In order to avoid a big mess I copied the package.json and package-lock.json files to duplicates
@@ -123,7 +123,7 @@ DON"T EXECUTE THESE INSRTRUCTIONS YET!!!
      ```$ DEBUG=solarbeeriot:* npm start```
      
 It would be a bad idea to do this BEFORE hand merging the package.json files.
-##Problems with Sequelize db:seed
+## Problems with Sequelize db:seed
 
 It appears that using db:seed is not fully reliable. Following the methods outlined here resulted in some odd results.
 In one case (one table) the seed ran but there weren't any changes to the database. In another the seed code had a typo
@@ -137,7 +137,7 @@ It might be that this is a problem isolated to sqlite too (file based not URL ba
 when connecting to the database in the script while trying to use a file: type URI. So it looks like seeding is a work in
 process and I thought it best to avoid it now and move on with more beer code!
 
-##Generating Express in an exising project
+## Generating Express in an exising project
 
 Looking to build from the bottom up the project started with installing and implementing a seeded database using Sequelize
 and Sqlite on Node.js running on the Beagle Bone Black Wireless. Not the easiest thing in the world, like most things. But
