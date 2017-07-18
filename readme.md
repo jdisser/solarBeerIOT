@@ -150,3 +150,18 @@ addExpress. Use addExpress to generate the app and then attempt to do a merge in
 unchanged. If it works then merge Testing into Master and go on from there. Just crazy enough to work! So here we are with
 this commit in the Testing branch that adds to this readme.
 
+## Routing
+
+The battery monitor will be generating two kinds of records, hourly (or periodically) and daily. In the model code these
+are referenced as BatRecords and SysRecords respectively. To get started we'll create a page with a table listing the
+data collected and another using parameters to define a date range to display in a graph for the batRecords and a table
+for the daily sysRecords. So the URLs will look look like this
+
+| URL                  | Page                               | Parameters          |
+| -------------------- | ---------------------------------- | ------------------- |
+| /batrecords          | Table of all records               | none                |
+| /batrecords/range?   | Plot of parameter for date range   | Start length Value  |
+| /sysrecords          | Table of daily totals              | None                |
+| /sysrecords/range?   | Table of date range                | Start End           |
+
+There will be two controllers, batRecord and sysRecord (pluralization?)
