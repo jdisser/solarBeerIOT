@@ -63,12 +63,12 @@ app.use(function(err, req, res, next) {
 });
 
 
-//dynamically includes controllers (routes)???
-fs.readdirSync('./controllers').forEach( function(file){
-  if (file.substr(-3) == '.js') {
-    route = require('./controllers/' + file);
-    route.controller(app);
-  }
-});
+// //dynamically includes controllers (routes)???
+// fs.readdirSync('./controllers').forEach( function(file){
+//   if (file.substr(-3) == '.js') {
+//     route = require('./controllers/' + file);
+//     route.controller(app);
+//   }
+// });
 
 module.exports = app;

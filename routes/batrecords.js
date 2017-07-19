@@ -1,12 +1,10 @@
 var express = require('express');
 var router = express.Router();
 
-router.get('/', function(req, res, next){
-  res.send('Battery Records Page');
-});
+var batrecords_controller = require('../controllers/batrecords.js');
 
-router.get('/range', function(req, res, next){
-  res.send('Battery date range plot');
-});
+router.get('/', batrecords_controller.table);
+
+router.get('/range', batrecords_controller.plot);
 
 module.exports = router;

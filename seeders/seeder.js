@@ -24,7 +24,7 @@ const sequelize = new Sequelize('solarbeer.db', '', '', {
 sequelize.import('../models/batrecord.js');
 sequelize.import('../models/sysrecord.js');
 
-var Monitor = require('../models/monitor.js');
+var Monitor = require('./monitor.js');
 var monitor = new Monitor();
 
 // This line saves your job by not deleting production data

@@ -1,12 +1,10 @@
 var express = require('express');
 var router = express.Router();
 
-router.get('/', function(req, res, next){
-  res.send('System Daily Records Table');
-});
+var sysrecords_controller = require('../controllers/sysrecords.js');
 
-router.get('/range', function(req, res, next){
-  res.send('System Daily Dated Records');
-});
+router.get('/', sysrecords_controller.table);
+
+router.get('/range', sysrecords_controller.range_table);
 
 module.exports = router;
