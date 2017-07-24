@@ -157,11 +157,15 @@ are referenced as BatRecords and SysRecords respectively. To get started we'll c
 data collected and another using parameters to define a date range to display in a graph for the batRecords and a table
 for the daily sysRecords. So the URLs will look look like this
 
-| URL                  | Page                               | Parameters          |
-| -------------------- | ---------------------------------- | ------------------- |
-| /batrecords          | Table of all records               | none                |
-| /batrecords/range?   | Plot of parameter for date range   | Start length Value  |
-| /sysrecords          | Table of daily totals              | None                |
-| /sysrecords/range?   | Table of date range                | Start End           |
+| URL                       | Page                               | Parameters          |
+| ------------------------- | ---------------------------------- | ------------------- |
+| /batrecords               | Table of all records               | none                |
+| /batrecords/batV?         | Plot of voltage for date range     | Start length        |
+| /batrecords/batI?         | Plot of current for date range     | Start length        |
+| /batrecords/batP?         | Plot of power for date range       | Start length        |
+| /batrecords/batC?         | Plot of level % for date range     | Start length        |
+| /batrecords/batQ?         | Plot of charge for date range      | Start length        |
+| /sysrecords               | Table of daily totals              | None                |
+| /sysrecords/range?        | Table of date range                | Start End           |
 
 There will be two controllers, batRecord and sysRecord (pluralization?)

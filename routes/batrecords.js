@@ -5,6 +5,14 @@ var batrecords_controller = require('../controllers/batrecords.js');
 
 router.get('/', batrecords_controller.table);
 
-router.get('/range', batrecords_controller.plot);
+router.get('/batV', batrecords_controller.plotV);
+
+router.get('/batI', batrecords_controller.plotI);
+
+router.get('/batP', batrecords_controller.plotP);
+
+router.get('/batC', batrecords_controller.plotC);
+
+router.get('/batQ', batrecords_controller.plotQ);
 
 module.exports = router;
