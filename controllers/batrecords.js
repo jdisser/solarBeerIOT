@@ -1,7 +1,13 @@
 var db = require('../models/index.js');
 
 exports.table = function(req, res, next){
-  res.send('batrecords controller: batrecords_table');
+  db.BatRecord.findAll()
+  .then(function(batRecords){
+    res.render('../views/batTable', {
+      batRecords: batRecords,            //array of model instances can be converted to plain objects with #get
+      title: 'SolarBeer Battery Data'
+    });
+  });
 };
 
 exports.plotV = function(req, res, next){

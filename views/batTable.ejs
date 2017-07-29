@@ -1,0 +1,28 @@
+<% layout ('layouts/main.ejs') %>
+
+<div id='batTable'>
+  <table>
+    <thead>
+      <tr>
+        <th>DateTime</th>
+        <th>Voltage</th>
+        <th>Current</th>
+        <th>Power</th>
+        <th>Charge %</th>
+        <th>AmprHours</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% batRecords.forEach(function(batRecord){ %>
+        <tr>
+          <td><%= batRecord.timeIndex %></td>
+          <td><%= batRecord.batV %></td>
+          <td><%= batRecord.batI %></td>
+          <td><%= batRecord.batP %></td>
+          <td><%= batRecord.batC %></td>
+          <td><%= batRecord.batQ %></td>
+        </tr>
+      <% }); %>
+    </tbody>
+  </table>
+</div>
