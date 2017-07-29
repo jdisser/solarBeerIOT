@@ -9,18 +9,20 @@
         <th>Current</th>
         <th>Power</th>
         <th>Charge %</th>
-        <th>AmprHours</th>
+        <th>AmpHours</th>
       </tr>
     </thead>
     <tbody>
+      <% var current%>
       <% batRecords.forEach(function(batRecord){ %>
+        <% current = moment(batRecord.timeIndex)%>
         <tr>
-          <td><%= batRecord.timeIndex %></td>
-          <td><%= batRecord.batV %></td>
-          <td><%= batRecord.batI %></td>
-          <td><%= batRecord.batP %></td>
-          <td><%= batRecord.batC %></td>
-          <td><%= batRecord.batQ %></td>
+          <td><%= current.format("L, LT") %></td>
+          <td><%= (batRecord.batV / 1000).toFixed(2) %></td>
+          <td><%= (batRecord.batI  / 1000).toFixed(2) %></td>
+          <td><%= (batRecord.batP / 100).toFixed(2) %></td>
+          <td><%= batRecord.batC.toFixed(1) %></td>
+          <td><%= (batRecord.batQ  / 1000).toFixed(2) %></td>
         </tr>
       <% }); %>
     </tbody>

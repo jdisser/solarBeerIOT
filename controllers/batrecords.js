@@ -1,11 +1,13 @@
 var db = require('../models/index.js');
+var moment = require('moment');
 
 exports.table = function(req, res, next){
   db.BatRecord.findAll()
   .then(function(batRecords){
     res.render('../views/batTable', {
       batRecords: batRecords,            //array of model instances can be converted to plain objects with #get
-      title: 'SolarBeer Battery Data'
+      title: 'SolarBeer Battery Data',
+      moment: moment
     });
   });
 };
