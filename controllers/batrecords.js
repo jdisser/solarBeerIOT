@@ -4,6 +4,7 @@ var moment = require('moment');
 exports.table = function(req, res, next){
   db.BatRecord.findAll()
   .then(function(batRecords){
+//    console.log(batRecords);
     res.render('../views/batTable', {
       batRecords: batRecords,            //array of model instances can be converted to plain objects with #get
       title: 'SolarBeer Battery Data',

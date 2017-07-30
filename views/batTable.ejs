@@ -15,7 +15,8 @@
     <tbody>
       <% var current%>
       <% batRecords.forEach(function(batRecord){ %>
-        <% current = moment(batRecord.timeIndex)%>
+        <% current = moment.unix(batRecord.timeIndex) %>
+        <% current.subtract(4, 'hours') %>
         <tr>
           <td><%= current.format("L, LT") %></td>
           <td><%= (batRecord.batV / 1000).toFixed(2) %></td>
