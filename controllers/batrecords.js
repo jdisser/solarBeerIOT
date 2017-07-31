@@ -14,11 +14,14 @@ exports.table = function(req, res, next){
 };
 
 exports.plotV = function(req, res, next){
-  res.send('batrecords controller: batrecords_Vplot');
+  res.render('../views/batPlot');
 };
 
 exports.plotVJson = function(req, res, next){
-  res.json({ a: 'a V object'});
+  db.BatRecord.findAll({attributes: ['timeIndex', 'batV']})
+    .then(function(batVs){
+      res.json(batVs);
+    });
 };
 
 exports.plotI = function(req, res, next){
@@ -26,7 +29,10 @@ exports.plotI = function(req, res, next){
 };
 
 exports.plotIJson = function(req, res, next){
-  res.json({ a: 'a I object'});
+    db.BatRecord.findAll({attributes: ['timeIndex', 'batI']})
+    .then(function(batIs){
+      res.json(batIs);
+    });
 };
 
 
@@ -35,7 +41,10 @@ exports.plotP = function(req, res, next){
 };
 
 exports.plotPJson = function(req, res, next){
-  res.json({ a: 'a P object'});
+    db.BatRecord.findAll({attributes: ['timeIndex', 'batP']})
+    .then(function(batPs){
+      res.json(batPs);
+    });
 };
 
 
@@ -44,7 +53,10 @@ exports.plotC = function(req, res, next){
 };
 
 exports.plotCJson = function(req, res, next){
-  res.json({ a: 'a C object'});
+    db.BatRecord.findAll({attributes: ['timeIndex', 'batC']})
+    .then(function(batCs){
+      res.json(batCs);
+    });
 };
 
 exports.plotQ = function(req, res, next){
@@ -52,5 +64,8 @@ exports.plotQ = function(req, res, next){
 };
 
 exports.plotQJson = function(req, res, next){
-  res.json({ a: 'a Q object'});
+    db.BatRecord.findAll({attributes: ['timeIndex', 'batQ']})
+    .then(function(batQs){
+      res.json(batQs);
+    });
 };
