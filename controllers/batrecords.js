@@ -14,7 +14,10 @@ exports.table = function(req, res, next){
 };
 
 exports.plotV = function(req, res, next){
-  res.render('../views/batPlot');
+  res.render('../views/batPlot', {
+    parameter: 'batV',
+    plotUrl: '/batrecords/batV/json'
+  });
 };
 
 exports.plotVJson = function(req, res, next){

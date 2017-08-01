@@ -3,25 +3,37 @@
 
 <script>
 
-var data = [
-  [new Date(2001, 0, 1), 1],
-  [new Date(2002, 0, 1), 2],
-  [new Date(2003, 0, 1), 2],
-  [new Date(2004, 0, 1), 3],
-  [new Date(2005, 0, 1), 4],
-  [new Date(2006, 0, 1), 5]
-];
+var data = []; // format of elements [new Date(2001, 0, 1), 1]
+
+var plotParams = { 
+    maxTime: 0,
+    minTime: 0,
+    maxDate: 0,
+    minDate: 0,
+    maxVal: 0,
+    minVal: 0,
+    parameter: ""
+};
+    
+plotParams.parameter = <%- JSON.stringify(parameter) %> //to pass string data into script from EJS object passed to render
+
+var batVData = d3.json(<%- JSON.stringify(plotUrl) %>, function(jsonData){ //the URL needs to be passed from the controller along with the parameter
+  //code to populate the plotParameter object and the data array goes here
+  console.log(jsonData);
+  console.log(plotParams);
+});
+
 
 var margin = {top: 20, right: 30, bottom: 30, left: 40},
     width = 960 - margin.left - margin.right,
     height = 500 - margin.top - margin.bottom;
 
 var x = d3.time.scale()
-    .domain([new Date(2001, 0, 1), new Date(2006, 0, 1)])
+    .domain([new Date(2001, 0, 1), new Date(2006, 0, 1)]) //use max & minDate
     .range([0, width]);
 
 var y = d3.scale.linear()
-    .domain([0, 6])
+    .domain([0, 6])  // use maxVal
     .range([height, 0]);
 
 var xAxis = d3.svg.axis()
