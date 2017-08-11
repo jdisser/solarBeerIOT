@@ -16,7 +16,7 @@ body {
 }
 
 .dot {
-  fill: white;
+  fill: blue;
   stroke: steelblue;
   stroke-width: 1.5px;
 }
