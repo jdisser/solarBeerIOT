@@ -16,7 +16,8 @@ exports.table = function(req, res, next){
 exports.plotV = function(req, res, next){
   res.render('../views/batPlot', {
     parameter: 'batV',
-    plotUrl: '/batrecords/batV/json'
+    plotUrl: '/batrecords/batV/json',
+    title: 'Battery Voltage'
   });
 };
 
