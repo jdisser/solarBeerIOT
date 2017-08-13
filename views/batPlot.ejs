@@ -52,7 +52,7 @@ var svg = d3.select("body").append("svg")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
   .append("g")
-    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");  //shift the 0,0 inside the margin
 
     
 plotParams.parameter = <%- JSON.stringify(parameter) %>     //paramter being plotted for labels
@@ -97,6 +97,18 @@ d3.json(<%- JSON.stringify(plotUrl) %>, function(jsonData){
   var yPad = (yMax - yMin) * 0.15;
   
   y.domain([(yMin - yPad) , (yMax + yPad)]);  //10% white space above & below plot line
+  
+  var yOffset = function(min, max){
+    if (min >= 0)
+      return height;        //min > 0
+    else {                  
+      if (max < 0) {
+        return height;      // min & max < 0
+      }
+      else                  // min < 0 < max
+        return y(0);
+    }
+  }
 
 
 // create the svg line code
@@ -110,7 +122,7 @@ d3.json(<%- JSON.stringify(plotUrl) %>, function(jsonData){
   
   svg.append("g")
       .attr("class", "x axis")
-      .attr("transform", "translate(0," + height + ")")
+      .attr("transform", "translate(0," + yOffset(yMin, yMax) + ")")  //was height
       .call(xAxis);
   
   svg.append("g")
@@ -135,7 +147,7 @@ d3.json(<%- JSON.stringify(plotUrl) %>, function(jsonData){
 
 // Add the chart title      
   svg.append('text')
-    .attr('transform', 'translate(' + width / 2 + ' , ' + margin.top + ')')
+    .attr('transform', 'translate(' + width / 2 + ' , ' +  margin.top / 2 + ')')
     .attr('text-anchor', 'middle')
     .attr('font-family', 'sans-serif')
     .attr('font-size', '20px')
