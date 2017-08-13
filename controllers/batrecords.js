@@ -29,7 +29,11 @@ exports.plotVJson = function(req, res, next){
 };
 
 exports.plotI = function(req, res, next){
-  res.send('batrecords controller: batrecords_Iplot');
+    res.render('../views/batPlot', {
+    parameter: 'batI',
+    plotUrl: '/batrecords/batI/json',
+    title: 'Battery Current'
+  });
 };
 
 exports.plotIJson = function(req, res, next){
@@ -41,7 +45,11 @@ exports.plotIJson = function(req, res, next){
 
 
 exports.plotP = function(req, res, next){
-  res.send('batrecords controller: batrecords_Pplot');
+    res.render('../views/batPlot', {
+    parameter: 'batP',
+    plotUrl: '/batrecords/batP/json',
+    title: 'Battery Power'
+  });
 };
 
 exports.plotPJson = function(req, res, next){
@@ -53,7 +61,11 @@ exports.plotPJson = function(req, res, next){
 
 
 exports.plotC = function(req, res, next){
-  res.send('batrecords controller: batrecords_Cplot');
+    res.render('../views/batPlot', {
+    parameter: 'batC',
+    plotUrl: '/batrecords/batC/json',
+    title: 'Battery Capacity'
+  });
 };
 
 exports.plotCJson = function(req, res, next){
@@ -64,7 +76,11 @@ exports.plotCJson = function(req, res, next){
 };
 
 exports.plotQ = function(req, res, next){
-  res.send('batrecords controller: batrecords_Qplot');
+    res.render('../views/batPlot', {
+    parameter: 'batQ',
+    plotUrl: '/batrecords/batQ/json',
+    title: 'Battery Charge'
+  });
 };
 
 exports.plotQJson = function(req, res, next){
