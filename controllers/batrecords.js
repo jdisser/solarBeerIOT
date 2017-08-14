@@ -17,7 +17,8 @@ exports.plotV = function(req, res, next){
   res.render('../views/batPlot', {
     parameter: 'batV',
     plotUrl: '/batrecords/batV/json',
-    title: 'Battery Voltage'
+    title: 'Battery Voltage',
+    scale: .001
   });
 };
 
@@ -32,7 +33,8 @@ exports.plotI = function(req, res, next){
     res.render('../views/batPlot', {
     parameter: 'batI',
     plotUrl: '/batrecords/batI/json',
-    title: 'Battery Current'
+    title: 'Battery Current',
+    scale: .001
   });
 };
 
@@ -48,7 +50,8 @@ exports.plotP = function(req, res, next){
     res.render('../views/batPlot', {
     parameter: 'batP',
     plotUrl: '/batrecords/batP/json',
-    title: 'Battery Power'
+    title: 'Battery Power',
+    scale: .01
   });
 };
 
@@ -64,7 +67,8 @@ exports.plotC = function(req, res, next){
     res.render('../views/batPlot', {
     parameter: 'batC',
     plotUrl: '/batrecords/batC/json',
-    title: 'Battery Capacity'
+    title: 'Battery Capacity',
+    scale: 1
   });
 };
 
@@ -72,6 +76,7 @@ exports.plotCJson = function(req, res, next){
     db.BatRecord.findAll({attributes: ['timeIndex', 'batC']})
     .then(function(batCs){
       res.json(batCs);
+      console.log(batCs);
     });
 };
 
@@ -79,7 +84,8 @@ exports.plotQ = function(req, res, next){
     res.render('../views/batPlot', {
     parameter: 'batQ',
     plotUrl: '/batrecords/batQ/json',
-    title: 'Battery Charge'
+    title: 'Battery Charge',
+    scale: .001
   });
 };
 

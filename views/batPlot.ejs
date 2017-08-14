@@ -19,7 +19,8 @@ var plotParams = {
     maxVal: 0,
     minVal: 0,
     parameter: "",
-    title: ""
+    title: "",
+    scale: 1
 };
 
 // set the canvas size
@@ -57,6 +58,7 @@ var svg = d3.select("body").append("svg")
     
 plotParams.parameter = <%- JSON.stringify(parameter) %>     //paramter being plotted for labels
 plotParams.title = <%- JSON.stringify(title) %>             //graph title
+plotParams.scale = <%- JSON.stringify(scale) %>
 
 // This code is generalized for any parameter, the URL for the specific parameter is passed in the request
 // JSON data is loaded asynchronously so code that depends on the data needs to be in the callback
@@ -66,9 +68,9 @@ d3.json(<%- JSON.stringify(plotUrl) %>, function(jsonData){
   var ta = [];
   var i = 0;
   jsonData.forEach((record) => {
-    //   console.log(record);
+      // console.log(record);
 
-      data.push([new Date(record.timeIndex * 1000), record[plotParams.parameter]/1000 ]);
+      data.push([new Date(record.timeIndex * 1000), record[plotParams.parameter] * plotParams.scale ]);  //scale parameter for std units
 
     //   console.log('data: ' + data[i]);
 
